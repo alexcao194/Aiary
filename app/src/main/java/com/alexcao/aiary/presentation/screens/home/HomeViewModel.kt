@@ -5,14 +5,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
+import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
     private var _homeState = MutableStateFlow(HomeState())
     val homeState: StateFlow<HomeState> = _homeState
 
     init {
-        val date = LocalDate.now()
-        val month = date.monthValue
+        val dateTime = Calendar.getInstance()
+        val month = dateTime.get(Calendar.MONTH)
         _homeState.update {
             it.copy(selectedMonth = month)
         }
