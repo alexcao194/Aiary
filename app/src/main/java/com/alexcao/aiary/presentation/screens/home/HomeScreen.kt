@@ -22,18 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alexcao.aiary.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.aiary.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.aiary.ui.theme.AiaryTheme
 import com.alexcao.aiary.ui.theme.InterTypography
 import com.alexcao.aiary.ui.theme.Primary
 import com.alexcao.aiary.ui.theme.PrimaryBackground
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
     val selectedPage = homeState.selectedPage
