@@ -1,78 +1,67 @@
 package com.alexcao.aiary.presentation.screens.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexcao.aiary.presentation.screens.home.widgets.ExpenseItem
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alexcao.aiary.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.aiary.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.aiary.ui.theme.AiaryTheme
 import com.alexcao.aiary.ui.theme.InterTypography
 import com.alexcao.aiary.ui.theme.Primary
 import com.alexcao.aiary.ui.theme.PrimaryBackground
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel(),
 ) {
-    var selectedIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    val homeState = homeViewModel.homeState.collectAsState().value
+    val selectedPage = homeState.selectedPage
+    val selectedMonth = homeState.selectedMonth
 
     val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { 2 },
+        initialPage = selectedPage,
+        pageCount = {2}
     )
 
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(selectedPage) {
+        pagerState.animateScrollToPage(selectedPage)
+    }
+
+    LaunchedEffect(selectedPage) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            homeViewModel.onPageSelected(page)
+        }
+    }
+
 
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = PrimaryBackground,
-                onClick = { /*TODO*/ }
+                onClick = { }
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -84,14 +73,19 @@ fun HomeScreen(
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            HomeHeader()
+            HomeHeader(
+                selectedMonth = selectedMonth,
+                onChangeMonth = { month ->
+                    homeViewModel.onMonthSelected(month)
+                },
+            )
             TabRow(
-                selectedTabIndex = selectedIndex,
+                selectedTabIndex = selectedPage,
                 containerColor = PrimaryBackground,
                 contentColor = Primary,
                 indicator = { tabPositions ->
                     SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedPage]),
                         height = 2.dp,
                         color = Primary
                     )
@@ -100,12 +94,9 @@ fun HomeScreen(
                 val tabs = listOf("In", "Out")
                 tabs.forEachIndexed { index, tab ->
                     Tab(
-                        selected = index == selectedIndex,
+                        selected = index == selectedPage,
                         onClick = {
-                            selectedIndex = index
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
+                            homeViewModel.onPageSelected(index)
                         },
                     ) {
                         Text(
