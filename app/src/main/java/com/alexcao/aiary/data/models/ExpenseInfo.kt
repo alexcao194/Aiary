@@ -3,6 +3,7 @@ package com.alexcao.aiary.data.models
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
@@ -20,6 +21,10 @@ import java.time.LocalDate
             childColumns = ["expenseSourceId"],
             onDelete = CASCADE
         )
+    ],
+    indices = [
+        Index("categoryId"),
+        Index("expenseSourceId")
     ]
 )
 data class ExpenseInfo(
