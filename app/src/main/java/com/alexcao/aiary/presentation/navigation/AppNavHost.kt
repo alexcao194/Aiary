@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.alexcao.aiary.presentation.screens.home.HomeScreen
+import com.alexcao.aiary.presentation.screens.settings.SettingsScreen
 
 @Composable
 fun AppNavHost(
@@ -20,7 +21,12 @@ fun AppNavHost(
     ) {
         composable(Route.HOME.route) {
             HomeScreen(
-//                navHostController = navHostController,
+                navHostController = navHostController,
+            )
+        }
+        composable(Route.SETTINGS.route) {
+            SettingsScreen(
+                navHostController = navHostController,
             )
         }
     }

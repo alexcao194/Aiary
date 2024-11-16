@@ -43,6 +43,7 @@ fun HomeHeader(
     onChangeMonth: (Int) -> Unit = {},
     selectedPage: Int = 0,
     onPageSelected: (Int) -> Unit = {},
+    onOpenSettings: () -> Unit = {}
 ) {
     val lazyRowState = rememberLazyListState()
     LaunchedEffect(Unit) {
@@ -69,7 +70,7 @@ fun HomeHeader(
                 modifier = Modifier.padding(8.dp)
             )
 
-            IconButton(onClick = { }) {
+            IconButton(onClick = { onOpenSettings() }) {
                 Icon(
                     imageVector = Icons.Rounded.Settings,
                     contentDescription = "Settings button",

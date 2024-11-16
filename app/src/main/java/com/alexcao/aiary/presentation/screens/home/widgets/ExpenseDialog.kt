@@ -96,9 +96,9 @@ fun ExpenseDialog(
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Badge(id = R.drawable.bike, label = "Transport")
+                        Badge(label = "Transport")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Badge(id = R.drawable.invoices, label = "Cash")
+                        Badge(label = "Cash")
                     }
                 }
             }

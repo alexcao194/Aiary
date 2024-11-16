@@ -7,7 +7,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.alexcao.aiary.data.models.Expense
+import com.alexcao.aiary.data.models.ExpenseCategory
 import com.alexcao.aiary.data.models.ExpenseInfo
+import com.alexcao.aiary.data.models.ExpenseSource
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,6 +22,24 @@ interface ExpenseDao {
 
     @Delete
     suspend fun deleteExpense(expense: ExpenseInfo)
+
+    @Insert
+    suspend fun insertCategory(category: ExpenseCategory)
+
+    @Update
+    suspend fun updateCategory(category: ExpenseCategory)
+
+    @Delete
+    suspend fun deleteCategory(category: ExpenseCategory)
+
+    @Insert
+    suspend fun insertExpenseSource(expenseSource: ExpenseSource)
+
+    @Update
+    suspend fun updateExpenseSource(expenseSource: ExpenseSource)
+
+    @Delete
+    suspend fun deleteExpenseSource(expenseSource: ExpenseSource)
 
     @Transaction
     @Query("SELECT * FROM ExpenseInfo")
@@ -40,4 +60,10 @@ interface ExpenseDao {
     @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE strftime('%m', date) = :month")
     fun getExpensesByMonth(month: String): Flow<List<Expense>>
+
+    @Query("SELECT * FROM ExpenseCategory")
+    fun getAllCategories(): Flow<List<ExpenseCategory>>
+
+    @Query("SELECT * FROM ExpenseSource")
+    fun getAllExpenseSources(): Flow<List<ExpenseSource>>
 }

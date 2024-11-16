@@ -69,9 +69,9 @@ fun ExpenseItem(
             }
         }
         Row {
-            Badge(id = R.drawable.bike, label = "Transport")
+            Badge(label = "Transport")
             Spacer(modifier = Modifier.padding(8.dp))
-            Badge(id = R.drawable.invoices, label = "Cash")
+            Badge(label = "Cash")
         }
     }
 }

@@ -20,6 +20,9 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.alexcao.aiary.presentation.navigation.Route
 import com.alexcao.aiary.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.aiary.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.aiary.presentation.screens.home.widgets.HomeHeader
@@ -30,6 +33,7 @@ import com.alexcao.aiary.ui.theme.PrimaryBackground
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
+    navHostController: NavHostController
 ) {
     val homeState = homeViewModel.homeState.collectAsState().value
     val selectedPage = homeState.selectedPage
@@ -46,7 +50,7 @@ fun HomeScreen(
         pagerState.animateScrollToPage(selectedPage)
     }
 
-    LaunchedEffect(selectedPage) {
+    LaunchedEffect(Unit) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             homeViewModel.onPageSelected(page)
         }
@@ -66,6 +70,9 @@ fun HomeScreen(
                 selectedPage = selectedPage,
                 onPageSelected = { page ->
                     homeViewModel.onPageSelected(page)
+                },
+                onOpenSettings = {
+                    navHostController.navigate(Route.SETTINGS.route)
                 }
             )
             HorizontalPager(state = pagerState) { page ->
@@ -76,7 +83,6 @@ fun HomeScreen(
                             isDialogOpen = true
                         }
                     )
-
                     1 -> ExpensePage(expenses = expenses)
                 }
             }
@@ -99,7 +105,10 @@ fun HomeScreen(
 @Composable
 @Preview(showBackground = true)
 fun HomeScreenPreview() {
+    val navHostController = rememberNavController()
     AiaryTheme {
-        HomeScreen()
+        HomeScreen(
+            navHostController = navHostController
+        )
     }
 }
