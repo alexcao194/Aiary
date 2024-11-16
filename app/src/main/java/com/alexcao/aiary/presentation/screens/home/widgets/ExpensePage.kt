@@ -1,8 +1,8 @@
 package com.alexcao.aiary.presentation.screens.home.widgets
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -16,17 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexcao.aiary.R
-import com.alexcao.aiary.data.models.ExpenseCategory
-import com.alexcao.aiary.data.models.ExpenseSource
 import com.alexcao.aiary.data.models.Expense
 import com.alexcao.aiary.ui.theme.InterTypography
 import com.alexcao.aiary.ui.theme.Primary
+import com.alexcao.aiary.utils.extensions.daysInMonth
+import com.alexcao.aiary.utils.extensions.isSameDay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Locale
 
 @Composable
@@ -36,7 +33,7 @@ fun ExpensePage(
 ) {
     val currentDate = LocalDate.now()
     val currentDay = currentDate.dayOfMonth
-    val daysInMonth = getAllDaysInMonth(currentDate.monthValue, currentDate.year)
+    val daysInMonth = currentDate.daysInMonth
     val lazyColumnState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
@@ -52,21 +49,19 @@ fun ExpensePage(
         state = lazyColumnState
     ) {
         items(currentDay) { index ->
-            val dateFormat = DateTimeFormatter.ofPattern("dd/MMM", Locale("en"))
-            val date = dateFormat.format(daysInMonth[index])
-
-            val expensesInDay = expenses.filter { isSameDay(it.info.date, daysInMonth[index]) }
+            val expensesInDay = expenses.filter { it.info.date.isSameDay(daysInMonth[index]) }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = date,
+                    text = daysInMonth[index].format(DateTimeFormatter.ofPattern("EEE, MMM dd", Locale.US)),
                     style = InterTypography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF8F8F8F)
                     ),
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = { /*TODO*/ }
                 ) {
@@ -82,22 +77,4 @@ fun ExpensePage(
             }
         }
     }
-}
-
-fun getAllDaysInMonth(month: Int, year: Int): List<LocalDate> {
-    val daysInMonth = mutableListOf<LocalDate>()
-    val calendar = Calendar.getInstance()
-    calendar.set(Calendar.MONTH, month - 1)
-    calendar.set(Calendar.YEAR, year)
-    val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    for (i in 1..maxDay) {
-        calendar.set(Calendar.DAY_OF_MONTH, i)
-        daysInMonth.add(LocalDate.of(year, month, i))
-    }
-    return daysInMonth
-}
-
-fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
-    Log.d("TAG", "isSameDay: $date1, $date2")
-    return date1.year == date2.year && date1.month == date2.month && date1.dayOfMonth == date2.dayOfMonth
 }
