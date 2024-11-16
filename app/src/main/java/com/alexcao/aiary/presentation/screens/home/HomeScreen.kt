@@ -29,6 +29,7 @@ fun HomeScreen(
     val homeState = homeViewModel.homeState.collectAsState().value
     val selectedPage = homeState.selectedPage
     val selectedMonth = homeState.selectedMonth
+    val expenses = homeState.expenses
 
     val pagerState = rememberPagerState(
         initialPage = selectedPage,
@@ -46,18 +47,7 @@ fun HomeScreen(
     }
 
     Scaffold(
-        modifier = modifier,
-        floatingActionButton = {
-            FloatingActionButton(
-                containerColor = PrimaryBackground,
-                onClick = { }
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Add,
-                    contentDescription = "Button to add new record"
-                )
-            }
-        }
+        modifier = modifier
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
@@ -74,8 +64,8 @@ fun HomeScreen(
             )
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
-                    0 -> ExpensePage()
-                    1 -> ExpensePage()
+                    0 -> ExpensePage(expenses = expenses)
+                    1 -> ExpensePage(expenses = expenses)
                 }
             }
         }

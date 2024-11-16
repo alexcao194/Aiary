@@ -21,7 +21,9 @@ class HomeViewModel @Inject constructor(
         val dateTime = Calendar.getInstance()
         val month = dateTime.get(Calendar.MONTH)
         _homeState.update {
-            it.copy(selectedMonth = month)
+            it.copy(
+                selectedMonth = month
+            )
         }
     }
 

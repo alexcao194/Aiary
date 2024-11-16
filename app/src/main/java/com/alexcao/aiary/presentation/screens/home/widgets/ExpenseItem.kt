@@ -19,14 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexcao.aiary.R
+import com.alexcao.aiary.data.models.Expense
 import com.alexcao.aiary.ui.theme.InterTypography
 import com.alexcao.aiary.ui.theme.Secondary
 
 @Composable
 fun ExpenseItem(
     modifier: Modifier = Modifier,
-    label: String,
-    amount: String,
+    expense: Expense
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +43,7 @@ fun ExpenseItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = label,
+                text = expense.label,
                 style = InterTypography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
@@ -61,7 +61,7 @@ fun ExpenseItem(
                 )
                 Spacer(modifier = Modifier.padding(2.dp))
                 Text(
-                    text = amount,
+                    text = expense.amount.toString(),
                     style = InterTypography.bodySmall.copy(
                         color = Secondary
                     )
@@ -74,13 +74,4 @@ fun ExpenseItem(
             Badge(id = R.drawable.invoices, label = "Cash")
         }
     }
-}
-
-@Composable
-@Preview
-fun ExpenseItemPreview() {
-    ExpenseItem(
-        label = "Gửi xe",
-        amount = "3,000 đ"
-    )
 }
