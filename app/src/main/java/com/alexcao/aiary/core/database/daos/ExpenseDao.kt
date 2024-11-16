@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
+import com.alexcao.aiary.data.models.Expense
 import com.alexcao.aiary.data.models.ExpenseInfo
 
 @Dao
@@ -18,18 +20,23 @@ interface ExpenseDao {
     @Delete
     suspend fun deleteExpense(expense: ExpenseInfo)
 
+    @Transaction
     @Query("SELECT * FROM ExpenseInfo")
-    suspend fun getAllExpenses(): List<ExpenseInfo>
+    suspend fun getAllExpenses(): List<Expense>
 
+    @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE id = :id")
-    suspend fun getExpenseById(id: Int): ExpenseInfo
+    suspend fun getExpenseById(id: Int): Expense
 
+    @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE categoryId = :categoryId")
-    suspend fun getExpensesByCategoryId(categoryId: Int): List<ExpenseInfo>
+    suspend fun getExpensesByCategoryId(categoryId: Int): List<Expense>
 
+    @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE expenseSourceId = :expenseSourceId")
-    suspend fun getExpensesBySourceId(expenseSourceId: Int): List<ExpenseInfo>
-    
+    suspend fun getExpensesBySourceId(expenseSourceId: Int): List<Expense>
+
+    @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE strftime('%m', date) = :month")
-    suspend fun getExpensesByMonth(month: String): List<ExpenseInfo>
+    suspend fun getExpensesByMonth(month: String): List<Expense>
 }
