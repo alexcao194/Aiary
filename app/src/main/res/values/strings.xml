@@ -2,4 +2,8 @@
     <string name="app_name">Aiary</string>
     <string name="expenses">Expense</string>
     <string name="income">Income</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="amount_hint">amount</string>
+    <string name="label_hint">label</string>
 </resources>

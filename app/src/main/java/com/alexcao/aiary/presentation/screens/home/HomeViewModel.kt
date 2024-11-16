@@ -50,4 +50,8 @@ class HomeViewModel @Inject constructor(
             it.copy(selectedPage = page)
         }
     }
+
+    fun onSaveExpense() {
+
+    }
 }
