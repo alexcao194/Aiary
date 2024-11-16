@@ -71,7 +71,7 @@ fun HomeHeader(
 }
 
 fun getMonthName(month: Int) : String {
-    val locale = Locale.getDefault()
+    val locale = Locale("en")
     val name = Month.entries[month].getDisplayName(TextStyle.FULL, locale)
     return name
 }

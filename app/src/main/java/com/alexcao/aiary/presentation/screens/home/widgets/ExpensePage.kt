@@ -86,7 +86,7 @@ fun getAllDaysInMonth(month: Int, year: Int): List<String> {
     val days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
     for (i in 1..days) {
         calendar.set(Calendar.DAY_OF_MONTH, i)
-        val simpleDateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
+        val simpleDateFormat = SimpleDateFormat("dd/MM", Locale("en"))
         daysInMonth.add(simpleDateFormat.format(calendar.time))
     }
     return daysInMonth
