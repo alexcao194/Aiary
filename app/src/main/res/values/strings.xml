@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Aiary</string>
+    <string name="expenses">Expense</string>
+    <string name="income">Income</string>
 </resources>
