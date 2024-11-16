@@ -3,6 +3,7 @@ package com.alexcao.aiary.presentation.screens.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexcao.aiary.core.Resource
 import com.alexcao.aiary.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,14 +24,22 @@ class HomeViewModel @Inject constructor(
 
     init {
         val dateTime = Calendar.getInstance()
-        val month = dateTime.get(Calendar.MONTH)
+        val month = dateTime.get(Calendar.MONTH) + 1
         viewModelScope.launch {
-            val expresses = expenseRepository.getExpenses()
-            _homeState.update {
-                it.copy(
-                    selectedMonth = month,
-                    expenses = expresses
-                )
+            expenseRepository.getExpenses(month).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        // Handle loading
+                    }
+                    is Resource.Success -> {
+                        _homeState.update {
+                            it.copy(expenses = resource.data ?: emptyList(), selectedMonth = month)
+                        }
+                    }
+                    is Resource.Error -> {
+                        // Handle error
+                    }
+                }
             }
         }
 
