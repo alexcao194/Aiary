@@ -24,21 +24,15 @@ class HomeViewModel @Inject constructor(
 
     init {
         val dateTime = Calendar.getInstance()
+        _homeState.update {
+            it.copy(selectedMonth = dateTime.get(Calendar.MONTH))
+        }
+
         val month = dateTime.get(Calendar.MONTH) + 1
         viewModelScope.launch {
-            expenseRepository.getExpenses(month).collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        // Handle loading
-                    }
-                    is Resource.Success -> {
-                        _homeState.update {
-                            it.copy(expenses = resource.data ?: emptyList(), selectedMonth = month)
-                        }
-                    }
-                    is Resource.Error -> {
-                        // Handle error
-                    }
+            expenseRepository.getExpenses(month).collect { expense ->
+                _homeState.update {
+                    it.copy(expenses = expense)
                 }
             }
         }
