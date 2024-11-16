@@ -43,7 +43,7 @@ fun ExpenseItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = expense.label,
+                text = expense.info.label,
                 style = InterTypography.bodyMedium.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
@@ -61,7 +61,7 @@ fun ExpenseItem(
                 )
                 Spacer(modifier = Modifier.padding(2.dp))
                 Text(
-                    text = expense.amount.toString(),
+                    text = expense.info.amount.toString(),
                     style = InterTypography.bodySmall.copy(
                         color = Secondary
                     )

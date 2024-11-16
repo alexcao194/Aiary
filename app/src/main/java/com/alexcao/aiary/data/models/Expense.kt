@@ -1,13 +1,21 @@
 package com.alexcao.aiary.data.models
 
-import java.time.LocalDate
+import androidx.room.Embedded
+import androidx.room.Relation
 
 data class Expense(
-    val id: Int,
-    val label: String,
-    val amount: Double,
-    val unit: String,
-    val date: LocalDate,
-    val category: Category,
-    val source: ExpanseSource
+    @Embedded
+    val info: ExpenseInfo,
+
+    @Relation(
+        parentColumn = "categoryId",
+        entityColumn = "id"
+    )
+    val category: ExpenseCategory,
+
+    @Relation(
+        parentColumn = "expenseSourceId",
+        entityColumn = "id"
+    )
+    val expenseSource: ExpenseSource
 )

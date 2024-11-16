@@ -19,12 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexcao.aiary.R
-import com.alexcao.aiary.data.models.Category
-import com.alexcao.aiary.data.models.ExpanseSource
+import com.alexcao.aiary.data.models.ExpenseCategory
+import com.alexcao.aiary.data.models.ExpenseSource
 import com.alexcao.aiary.data.models.Expense
 import com.alexcao.aiary.ui.theme.InterTypography
 import com.alexcao.aiary.ui.theme.Primary
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -56,7 +55,7 @@ fun ExpensePage(
             val dateFormat = DateTimeFormatter.ofPattern("dd/MMM", Locale("en"))
             val date = dateFormat.format(daysInMonth[index])
 
-            val expensesInDay = expenses.filter { isSameDay(it.date, daysInMonth[index]) }
+            val expensesInDay = expenses.filter { isSameDay(it.info.date, daysInMonth[index]) }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -101,30 +100,4 @@ fun getAllDaysInMonth(month: Int, year: Int): List<LocalDate> {
 fun isSameDay(date1: LocalDate, date2: LocalDate): Boolean {
     Log.d("TAG", "isSameDay: $date1, $date2")
     return date1.year == date2.year && date1.month == date2.month && date1.dayOfMonth == date2.dayOfMonth
-}
-
-@Composable
-@Preview(
-    showBackground = true
-)
-fun ExpensePagePreview() {
-    ExpensePage(
-        expenses = listOf(
-            Expense(
-                id = 1,
-                date = LocalDate.now(),
-                label = "Transcription",
-                unit = "VND",
-                amount = 100000.0,
-                source = ExpanseSource(
-                    name = "Transport",
-                    drawable = R.drawable.bike
-                ),
-                category = Category(
-                    name = "Transport",
-                    drawable = R.drawable.invoices
-                )
-            )
-        )
-    )
 }
