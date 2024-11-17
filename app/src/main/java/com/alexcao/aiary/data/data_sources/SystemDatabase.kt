@@ -12,7 +12,7 @@ import com.alexcao.aiary.data.models.ExpenseSource
 
 @Database(
     entities = [ExpenseInfo::class, ExpenseCategory::class, ExpenseSource::class],
-    version = 3,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(LocalDateConverter::class, ColorConverter::class)
