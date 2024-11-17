@@ -9,12 +9,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexcao.aiary.presentation.commons.AppHeader
 import com.alexcao.aiary.presentation.screens.home.widgets.Badge
+import com.alexcao.aiary.presentation.screens.settings.widgets.BadgeDialog
+import com.alexcao.aiary.ui.theme.badgeLights
+import com.alexcao.aiary.ui.theme.badges
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -22,6 +29,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navHostController: NavHostController
 ) {
+    var isBadgeDialogOpen by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         modifier = modifier
     ) { padding ->
@@ -43,12 +51,17 @@ fun SettingsScreen(
                     for (i in 0..5) {
                         Badge(
                             modifier = Modifier.padding(4.dp),
-                            label = "Category $i"
+                            label = "Category $i",
+                            color = badgeLights[i],
+                            isLight = true,
+                            onClick = { isBadgeDialogOpen = true }
                         )
                     }
                     Badge(
                         modifier = Modifier.padding(4.dp),
-                        label = "+"
+                        label = "+",
+                        isLight = true,
+                        color = badgeLights[6],
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -61,12 +74,14 @@ fun SettingsScreen(
                     for (i in 0..5) {
                         Badge(
                             modifier = Modifier.padding(4.dp),
-                            label = "Source $i"
+                            label = "Source $i",
+                            color = badges[i]
                         )
                     }
                     Badge(
                         modifier = Modifier.padding(4.dp),
-                        label = "+"
+                        label = "+",
+                        color = badges[6],
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -79,15 +94,24 @@ fun SettingsScreen(
                     for (i in 0..5) {
                         Badge(
                             modifier = Modifier.padding(4.dp),
-                            label = "VND"
+                            label = "VND",
+                            color = badgeLights[i]
                         )
                     }
                     Badge(
                         modifier = Modifier.padding(4.dp),
-                        label = "+"
+                        label = "+",
+                        color = badgeLights[6],
                     )
                 }
             }
+        }
+
+        if (isBadgeDialogOpen) {
+            BadgeDialog(
+                onDismissRequest = { isBadgeDialogOpen = false },
+                colors = badgeLights
+            )
         }
     }
 }

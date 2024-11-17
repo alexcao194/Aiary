@@ -10,26 +10,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun Badge(
     modifier: Modifier = Modifier,
+    color: Color,
     label: String,
+    onClick: () -> Unit = {},
+    isLight: Boolean = false
 ) {
     Button(
         modifier = modifier.height(28.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = MaterialTheme.colorScheme.secondary,
+            containerColor = color,
         ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.secondary),
         shape = RoundedCornerShape(16.dp),
         contentPadding = PaddingValues(horizontal = 8.dp),
-        onClick = { /*TODO*/ }
+        onClick = { onClick() }
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall.copy(
+                color =
+                if (isLight)
+                    MaterialTheme.colorScheme.onSurface
+                else
+                    MaterialTheme.colorScheme.onPrimary
+            )
         )
     }
 }

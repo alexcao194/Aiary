@@ -62,9 +62,9 @@ fun ExpenseItem(
             }
         }
         Row {
-            Badge(label = "Transport")
+            Badge(label = "Transport", color = Color(0xFFE9E9E9))
             Spacer(modifier = Modifier.padding(8.dp))
-            Badge(label = "Cash")
+            Badge(label = "Cash", color = Color(0xFFE9E9E9))
         }
     }
 }

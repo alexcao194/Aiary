@@ -1,4 +1,4 @@
-package com.alexcao.aiary.presentation.screens.home.widgets
+package com.alexcao.aiary.presentation.commons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
