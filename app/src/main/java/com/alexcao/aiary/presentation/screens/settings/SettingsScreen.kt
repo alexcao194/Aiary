@@ -15,12 +15,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexcao.aiary.presentation.commons.AppHeader
-import com.alexcao.aiary.presentation.screens.home.widgets.Badge
+import com.alexcao.aiary.presentation.screens.home.widgets.BadgeChip
 import com.alexcao.aiary.presentation.screens.settings.widgets.BadgeDialog
 import com.alexcao.aiary.ui.theme.badgeLights
 import com.alexcao.aiary.ui.theme.badgeOther
@@ -37,7 +38,12 @@ fun SettingsScreen(
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories
     val sources = state.sources
+
     var isBadgeDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var currentLabel = rememberSaveable { mutableStateOf("") }
+    var currentColor = rememberSaveable { mutableStateOf(badgeLights.first().toArgb()) }
+    var isLight = rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         modifier = modifier
     ) { padding ->
@@ -57,19 +63,30 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
                     for (category in categories) {
-                        Badge(
+                        BadgeChip(
                             modifier = Modifier.padding(4.dp),
                             label = category.name,
                             color = category.tint,
                             isLight = true,
-                            onClick = { isBadgeDialogOpen = true }
+                            onClick = {
+                                currentLabel.value = category.name
+                                currentColor.value = category.tint.toArgb()
+                                isBadgeDialogOpen = true
+                                isLight.value = true
+                            }
                         )
                     }
-                    Badge(
+                    BadgeChip(
                         modifier = Modifier.padding(4.dp),
                         label = "+",
                         color = badgeOtherLight,
                         isLight = true,
+                        onClick = {
+                            isBadgeDialogOpen = true
+                            currentLabel.value = ""
+                            currentColor.value = badgeLights[0].toArgb()
+                            isLight.value = true
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -80,17 +97,28 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
                     for (source in sources) {
-                        Badge(
+                        BadgeChip(
                             modifier = Modifier.padding(4.dp),
                             label = source.name,
                             color = source.tint,
-                            onClick = { isBadgeDialogOpen = true }
+                            onClick = {
+                                isBadgeDialogOpen = true
+                                currentLabel.value = source.name
+                                currentColor.value = source.tint.toArgb()
+                                isLight.value = false
+                            }
                         )
                     }
-                    Badge(
+                    BadgeChip(
                         modifier = Modifier.padding(4.dp),
                         label = "+",
                         color = badgeOther,
+                        onClick = {
+                            isBadgeDialogOpen = true
+                            currentLabel.value = ""
+                            currentColor.value = badges[0].toArgb()
+                            isLight.value = false
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
@@ -101,13 +129,13 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
                     for (i in 0..5) {
-                        Badge(
+                        BadgeChip(
                             modifier = Modifier.padding(4.dp),
                             label = "VND",
                             color = badgeLights[i]
                         )
                     }
-                    Badge(
+                    BadgeChip(
                         modifier = Modifier.padding(4.dp),
                         label = "+",
                         color = badgeLights[6],
@@ -118,8 +146,21 @@ fun SettingsScreen(
 
         if (isBadgeDialogOpen) {
             BadgeDialog(
-                onDismissRequest = { isBadgeDialogOpen = false },
-                colors = badgeLights
+                onDismissRequest = {
+                    isBadgeDialogOpen = false },
+                colors = if (isLight.value) badgeLights else badges,
+                label = currentLabel.value,
+                color = Color(currentColor.value),
+                onChange = { label, color ->
+                    currentLabel.value = label
+                    currentColor.value = color.toArgb()
+                },
+                onSave = {
+                    settingsViewModel.onSaveCategory(
+                        currentLabel.value,
+                        Color(currentColor.value)
+                    )
+                }
             )
         }
     }

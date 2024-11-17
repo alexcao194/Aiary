@@ -1,6 +1,5 @@
 package com.alexcao.aiary.presentation.screens.home.widgets
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Badge(
+fun BadgeChip(
     modifier: Modifier = Modifier,
     color: Color,
     label: String,

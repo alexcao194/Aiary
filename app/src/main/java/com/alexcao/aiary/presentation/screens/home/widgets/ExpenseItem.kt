@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alexcao.aiary.R
 import com.alexcao.aiary.data.models.Expense
@@ -62,9 +61,9 @@ fun ExpenseItem(
             }
         }
         Row {
-            Badge(label = "Transport", color = Color(0xFFE9E9E9))
+            BadgeChip(label = "Transport", color = Color(0xFFE9E9E9))
             Spacer(modifier = Modifier.padding(8.dp))
-            Badge(label = "Cash", color = Color(0xFFE9E9E9))
+            BadgeChip(label = "Cash", color = Color(0xFFE9E9E9))
         }
     }
 }

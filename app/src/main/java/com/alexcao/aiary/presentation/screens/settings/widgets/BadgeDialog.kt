@@ -1,6 +1,7 @@
 package com.alexcao.aiary.presentation.screens.settings.widgets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +35,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -49,17 +55,16 @@ import com.alexcao.aiary.presentation.commons.FilledTextField
 fun BadgeDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
+    onChange: (String, Color) -> Unit,
+    onSave: () -> Unit,
     colors: List<Color>,
-    initialLabel: String = "",
-    initialColor: Color = colors.first(),
+    label: String,
+    color: Color,
 ) {
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
     ) {
-        var label by rememberSaveable { mutableStateOf(initialLabel) }
-        var currentColor by rememberSaveable { mutableIntStateOf(initialColor.toArgb()) }
-
         val labelFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
@@ -79,7 +84,7 @@ fun BadgeDialog(
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
                     value = label,
-                    onValueChange = { label = it },
+                    onValueChange = { onChange(it, color) },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
@@ -92,22 +97,23 @@ fun BadgeDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyRow {
-                    items(colors) { color ->
+                    items(colors) { badgeColor ->
                         Box(
                             modifier = Modifier
                                 .padding(4.dp)
-                                .background(color = color, shape = CircleShape)
+                                .clip(CircleShape)
+                                .background(color = badgeColor)
                                 .size(32.dp)
+                                .clickable {
+                                    onChange(label, badgeColor)
+                                },
 
+                            contentAlignment = Alignment.Center
                         ) {
-                            if (color.toArgb() == currentColor) {
-                                Box(
-                                    modifier = Modifier
-                                        .background(
-                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                            shape = CircleShape
-                                        )
-                                        .size(32.dp)
+                            if (badgeColor.toArgb() == color.toArgb()) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Check,
+                                    contentDescription = "Selected",
                                 )
                             }
                         }
@@ -135,7 +141,12 @@ fun BadgeDialog(
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                FilledTonalButton(onClick = { onDismissRequest() }) {
+                FilledTonalButton(
+                    onClick = {
+                        onDismissRequest()
+                        onSave()
+                    }
+                ) {
                     Text(
                         text = stringResource(id = R.string.save),
                         style = MaterialTheme.typography.bodySmall.copy(

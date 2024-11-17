@@ -101,9 +101,9 @@ fun ExpenseDialog(
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Badge(label = "Transport", color = MaterialTheme.colorScheme.secondary)
+                    BadgeChip(label = "Transport", color = MaterialTheme.colorScheme.secondary)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Badge(label = "Cash", color = MaterialTheme.colorScheme.secondary)
+                    BadgeChip(label = "Cash", color = MaterialTheme.colorScheme.secondary)
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))

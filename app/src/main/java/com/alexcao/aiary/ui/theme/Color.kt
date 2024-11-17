@@ -1,4 +1,5 @@
 package com.alexcao.aiary.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF8E4958)
@@ -82,7 +83,7 @@ val badgePurpleLight = Color(0xFFE6CFF2)
 val badgeSapphireLight = Color(0xFFC6DBE1)
 val badgeOtherLight = Color(0xFFE6E6E6)
 
-val badgeLights = listOf(
+val badgeLights: List<Color> = listOf(
     badgePinkLight,
     badgeBrownLight,
     badgeYellowLight,
@@ -102,7 +103,7 @@ val badgePurple = Color(0xFF215A6C)
 val badgeSapphire = Color(0xFF5A3286)
 val badgeOther = Color(0xFF3D3D3D)
 
-val badges = listOf(
+val badges: List<Color> = listOf(
     badgePink,
     badgeBrown,
     badgeYellow,

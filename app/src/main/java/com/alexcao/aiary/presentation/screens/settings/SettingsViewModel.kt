@@ -1,8 +1,10 @@
 package com.alexcao.aiary.presentation.screens.settings
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexcao.aiary.data.models.ExpenseCategory
 import com.alexcao.aiary.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +33,12 @@ class SettingsViewModel @Inject constructor(
                     it.copy(sources = sources)
                 }
             }
+        }
+    }
+
+    fun onSaveCategory(value: String, color: Color) {
+        viewModelScope.launch {
+//            expenseRepository.addCategory(ExpenseCategory(name = value, tint = color, expenseId = 0))
         }
     }
 }
