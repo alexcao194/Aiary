@@ -1,9 +1,7 @@
 package com.alexcao.aiary.data.models
 
-import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
 @Entity
@@ -12,6 +10,5 @@ data class ExpenseCategory(
     val id: Int = 0,
     val name: String,
     val expenseId: Int,
-    @DrawableRes
-    val drawable: Int
+    val tint: Color,
 )

@@ -2,7 +2,6 @@ package com.alexcao.aiary.data.models
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
@@ -13,13 +12,13 @@ import java.time.LocalDate
             entity = ExpenseInfo::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = ExpenseInfo::class,
             parentColumns = ["id"],
             childColumns = ["expenseSourceId"],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [

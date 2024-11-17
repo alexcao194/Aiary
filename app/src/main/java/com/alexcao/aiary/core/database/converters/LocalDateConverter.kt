@@ -1,11 +1,10 @@
-package com.alexcao.aiary.core.database
+package com.alexcao.aiary.core.database.converters
 
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class Converters {
-
+class LocalDateConverter {
     // Convert LocalDate to String (ISO format)
     @TypeConverter
     fun fromLocalDate(localDate: LocalDate?): String? {
