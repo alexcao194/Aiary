@@ -57,6 +57,7 @@ fun BadgeDialog(
     onDismissRequest: () -> Unit,
     onChange: (String, Color) -> Unit,
     onSave: () -> Unit,
+    onDelete: (() -> Unit)? = null,
     colors: List<Color>,
     label: String,
     color: Color,
@@ -126,6 +127,24 @@ fun BadgeDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
+                if (onDelete != null) FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    onClick = {
+                        onDismissRequest()
+                        onDelete.invoke()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,

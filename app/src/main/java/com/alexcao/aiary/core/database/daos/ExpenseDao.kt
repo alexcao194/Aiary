@@ -33,13 +33,13 @@ interface ExpenseDao {
     suspend fun deleteCategory(category: ExpenseCategory)
 
     @Insert
-    suspend fun insertExpenseSource(expenseSource: ExpenseSource)
+    suspend fun insertSource(expenseSource: ExpenseSource)
 
     @Update
-    suspend fun updateExpenseSource(expenseSource: ExpenseSource)
+    suspend fun updateSource(expenseSource: ExpenseSource)
 
     @Delete
-    suspend fun deleteExpenseSource(expenseSource: ExpenseSource)
+    suspend fun deleteSource(expenseSource: ExpenseSource)
 
     @Transaction
     @Query("SELECT * FROM ExpenseInfo")

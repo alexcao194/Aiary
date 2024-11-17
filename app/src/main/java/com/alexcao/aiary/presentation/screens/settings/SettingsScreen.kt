@@ -1,5 +1,6 @@
 package com.alexcao.aiary.presentation.screens.settings
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -7,26 +8,30 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.alexcao.aiary.data.models.ExpenseCategory
+import com.alexcao.aiary.data.models.ExpenseSource
 import com.alexcao.aiary.presentation.commons.AppHeader
 import com.alexcao.aiary.presentation.screens.home.widgets.BadgeChip
-import com.alexcao.aiary.presentation.screens.settings.widgets.BadgeDialog
+import com.alexcao.aiary.presentation.screens.settings.widgets.CategoryDialog
+import com.alexcao.aiary.presentation.screens.settings.widgets.SourceDialog
 import com.alexcao.aiary.ui.theme.badgeLights
 import com.alexcao.aiary.ui.theme.badgeOther
 import com.alexcao.aiary.ui.theme.badgeOtherLight
-import com.alexcao.aiary.ui.theme.badges
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -38,14 +43,19 @@ fun SettingsScreen(
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories
     val sources = state.sources
+    val error = state.error
 
-    var isBadgeDialogOpen by rememberSaveable { mutableStateOf(false) }
-    var currentLabel = rememberSaveable { mutableStateOf("") }
-    var currentColor = rememberSaveable { mutableStateOf(badgeLights.first().toArgb()) }
-    var isLight = rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    var isCategoryDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var isSourceDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var currentCategory: ExpenseCategory? = null
+    var currentSource: ExpenseSource? = null
 
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
@@ -69,10 +79,8 @@ fun SettingsScreen(
                             color = category.tint,
                             isLight = true,
                             onClick = {
-                                currentLabel.value = category.name
-                                currentColor.value = category.tint.toArgb()
-                                isBadgeDialogOpen = true
-                                isLight.value = true
+                                isCategoryDialogOpen = true
+                                currentCategory = category
                             }
                         )
                     }
@@ -82,10 +90,8 @@ fun SettingsScreen(
                         color = badgeOtherLight,
                         isLight = true,
                         onClick = {
-                            isBadgeDialogOpen = true
-                            currentLabel.value = ""
-                            currentColor.value = badgeLights[0].toArgb()
-                            isLight.value = true
+                            isCategoryDialogOpen = true
+                            currentCategory = null
                         }
                     )
                 }
@@ -102,10 +108,8 @@ fun SettingsScreen(
                             label = source.name,
                             color = source.tint,
                             onClick = {
-                                isBadgeDialogOpen = true
-                                currentLabel.value = source.name
-                                currentColor.value = source.tint.toArgb()
-                                isLight.value = false
+                                isSourceDialogOpen = true
+                                currentSource = source
                             }
                         )
                     }
@@ -114,10 +118,8 @@ fun SettingsScreen(
                         label = "+",
                         color = badgeOther,
                         onClick = {
-                            isBadgeDialogOpen = true
-                            currentLabel.value = ""
-                            currentColor.value = badges[0].toArgb()
-                            isLight.value = false
+                            isSourceDialogOpen = true
+                            currentSource = null
                         }
                     )
                 }
@@ -144,24 +146,30 @@ fun SettingsScreen(
             }
         }
 
-        if (isBadgeDialogOpen) {
-            BadgeDialog(
-                onDismissRequest = {
-                    isBadgeDialogOpen = false },
-                colors = if (isLight.value) badgeLights else badges,
-                label = currentLabel.value,
-                color = Color(currentColor.value),
-                onChange = { label, color ->
-                    currentLabel.value = label
-                    currentColor.value = color.toArgb()
-                },
-                onSave = {
-                    settingsViewModel.onSaveCategory(
-                        currentLabel.value,
-                        Color(currentColor.value)
-                    )
-                }
+        if (isCategoryDialogOpen) {
+            CategoryDialog(
+                initialCategory = currentCategory,
+                onDismissRequest = { isCategoryDialogOpen = false },
+                onSave = { category -> settingsViewModel.saveCategory(category) },
+                onDelete = { category -> settingsViewModel.deleteCategory(category) }
             )
+        }
+
+        if (isSourceDialogOpen) {
+            SourceDialog(
+                initialSource = currentSource,
+                onDismissRequest = { isSourceDialogOpen = false },
+                onSave = { source -> settingsViewModel.saveSource(source) },
+                onDelete = { source -> settingsViewModel.deleteSource(source) }
+            )
+        }
+
+        LaunchedEffect(error) {
+            error?.let {
+                Log.d("TAG", "SettingsScreen: $it")
+                snackbarHostState.showSnackbar(it)
+                settingsViewModel.clearError()
+            }
         }
     }
 }

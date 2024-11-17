@@ -1,10 +1,11 @@
 package com.alexcao.aiary.presentation.screens.settings
 
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexcao.aiary.core.Resource
 import com.alexcao.aiary.data.models.ExpenseCategory
+import com.alexcao.aiary.data.models.ExpenseSource
 import com.alexcao.aiary.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,9 +37,63 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onSaveCategory(value: String, color: Color) {
+    fun saveCategory(category: ExpenseCategory) {
         viewModelScope.launch {
-//            expenseRepository.addCategory(ExpenseCategory(name = value, tint = color, expenseId = 0))
+            expenseRepository.addCategory(category).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = it.error) }
+                    }
+                }
+            }
         }
+    }
+
+    fun deleteCategory(category: ExpenseCategory) {
+        viewModelScope.launch {
+            expenseRepository.deleteCategory(category).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun saveSource(source: ExpenseSource) {
+        viewModelScope.launch {
+            expenseRepository.addSource(source).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun deleteSource(source: ExpenseSource) {
+        viewModelScope.launch {
+            expenseRepository.deleteSource(source).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun clearError() {
+        state.update { it.copy(error = null) }
     }
 }

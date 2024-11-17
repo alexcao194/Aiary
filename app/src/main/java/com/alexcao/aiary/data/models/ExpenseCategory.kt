@@ -9,6 +9,5 @@ data class ExpenseCategory(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val expenseId: Int,
     val tint: Color,
 )

@@ -7,8 +7,6 @@ import com.alexcao.aiary.data.models.ExpenseCategory
 import com.alexcao.aiary.data.models.ExpenseSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import java.time.Month
 import javax.inject.Inject
 
 interface ExpenseRepository {
@@ -17,6 +15,10 @@ interface ExpenseRepository {
     fun getExpensesSource(): Flow<List<ExpenseSource>>
     suspend fun addExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun deleteExpense(expense: Expense): Flow<Resource<Unit>>
+    suspend fun addCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>>
+    suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>>
+    suspend fun addSource(source: ExpenseSource): Flow<Resource<Unit>>
+    suspend fun deleteSource(source: ExpenseSource): Flow<Resource<Unit>>
 }
 
 class ExpenseRepositoryImpl @Inject constructor(
@@ -52,6 +54,47 @@ class ExpenseRepositoryImpl @Inject constructor(
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while deleting expense"))
+        }
+    }
+
+    override suspend fun addCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                systemDatabase.expenseDao().insertCategory(expenseCategory)
+                emit(Resource.Success(Unit))
+            } catch (e: Exception) {
+                emit(Resource.Error("An error occurred while adding category"))
+            }
+        }
+
+    override suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            systemDatabase.expenseDao().deleteCategory(category)
+            emit(Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error("An error occurred while deleting category"))
+        }
+    }
+
+    override suspend fun addSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            systemDatabase.expenseDao().insertSource(source)
+            emit(Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error("An error occurred while adding source"))
+        }
+    }
+
+    override suspend fun deleteSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            systemDatabase.expenseDao().deleteSource(source)
+            emit(Resource.Success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.Error("An error occurred while deleting source"))
         }
     }
 }

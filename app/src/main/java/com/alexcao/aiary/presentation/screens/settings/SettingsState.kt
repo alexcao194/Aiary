@@ -5,5 +5,7 @@ import com.alexcao.aiary.data.models.ExpenseSource
 
 data class SettingsState(
     val categories: List<ExpenseCategory> = emptyList(),
-    val sources: List<ExpenseSource> = emptyList()
+    val sources: List<ExpenseSource> = emptyList(),
+    val loading: Boolean = false,
+    val error: String? = null
 )
