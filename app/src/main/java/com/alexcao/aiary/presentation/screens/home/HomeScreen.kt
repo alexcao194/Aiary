@@ -30,10 +30,10 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
     navHostController: NavHostController
 ) {
-    val homeState = homeViewModel.homeState.collectAsState().value
-    val selectedPage = homeState.selectedPage
-    val selectedMonth = homeState.selectedMonth
-    val expenses = homeState.expenses
+    val state = homeViewModel.state.collectAsState().value
+    val selectedPage = state.selectedPage
+    val selectedMonth = state.selectedMonth
+    val expenses = state.expenses
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
 
     val pagerState = rememberPagerState(
