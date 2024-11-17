@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
@@ -28,9 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexcao.aiary.R
-import com.alexcao.aiary.ui.theme.InterTypography
-import com.alexcao.aiary.ui.theme.Primary
-import com.alexcao.aiary.ui.theme.PrimaryBackground
 import java.time.Month
 import java.util.Locale
 import java.time.format.TextStyle
@@ -53,7 +51,7 @@ fun HomeHeader(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = PrimaryBackground,
+                color = MaterialTheme.colorScheme.primaryContainer,
             )
     ) {
         Row(
@@ -63,10 +61,7 @@ fun HomeHeader(
         ) {
             Text(
                 text = "Welcome back, Alex",
-                style = InterTypography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                ),
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(8.dp)
             )
 
@@ -74,7 +69,7 @@ fun HomeHeader(
                 Icon(
                     imageVector = Icons.Rounded.Settings,
                     contentDescription = "Settings button",
-                    tint = Primary
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -91,12 +86,13 @@ fun HomeHeader(
                     TextButton(onClick = { onChangeMonth(index) }) {
                         Text(
                             text = getMonthName(index),
-                            style = if (index == selectedMonth) InterTypography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            ) else InterTypography.titleMedium.copy(
-                                color = Color.Gray
-                            ),
+                            style =
+                            if (index == selectedMonth)
+                                MaterialTheme.typography.titleMedium
+                            else
+                                MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.inversePrimary
+                                ),
                             modifier = Modifier.padding(8.dp)
                         )
                     }
@@ -105,13 +101,13 @@ fun HomeHeader(
         }
         TabRow(
             selectedTabIndex = selectedPage,
-            containerColor = PrimaryBackground,
-            contentColor = Primary,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.primary,
             indicator = { tabPositions ->
                 SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[selectedPage]),
                     height = 2.dp,
-                    color = Primary
+                    color = MaterialTheme.colorScheme.primary
                 )
             },
         ) {
@@ -127,11 +123,9 @@ fun HomeHeader(
                     },
                 ) {
                     Text(
+                        modifier = Modifier.padding(8.dp),
                         text = stringResource(id = tabId),
-                        style = InterTypography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                        ),
-                        modifier = Modifier.padding(8.dp)
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }
@@ -139,7 +133,7 @@ fun HomeHeader(
     }
 }
 
-fun getMonthName(month: Int) : String {
+fun getMonthName(month: Int): String {
     val locale = Locale("en")
     val name = Month.entries[month].getDisplayName(TextStyle.FULL, locale)
     return name

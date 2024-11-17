@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alexcao.aiary.data.models.Expense
-import com.alexcao.aiary.ui.theme.InterTypography
-import com.alexcao.aiary.ui.theme.Primary
 import com.alexcao.aiary.utils.extensions.daysInMonth
 import com.alexcao.aiary.utils.extensions.isSameDay
 import java.time.LocalDate
@@ -57,10 +56,7 @@ fun ExpensePage(
             ) {
                 Text(
                     text = daysInMonth[index].format(DateTimeFormatter.ofPattern("EEE, MMM dd", Locale.US)),
-                    style = InterTypography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF8F8F8F)
-                    ),
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
@@ -68,7 +64,7 @@ fun ExpensePage(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
-                        tint = Primary,
+                        tint = MaterialTheme.colorScheme.primary,
                         contentDescription = "Add expense in specific day",
                     )
                 }

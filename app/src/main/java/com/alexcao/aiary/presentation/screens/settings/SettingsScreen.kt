@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.alexcao.aiary.presentation.commons.AppHeader
 import com.alexcao.aiary.presentation.screens.home.widgets.Badge
-import com.alexcao.aiary.ui.theme.InterTypography
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -36,9 +36,7 @@ fun SettingsScreen(
             ) {
                 Text(
                     text = "Expense Category",
-                    style = InterTypography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
@@ -56,9 +54,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(
                     text = "Expense Source",
-                    style = InterTypography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
@@ -76,9 +72,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(
                     text = "Unit",
-                    style = InterTypography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {

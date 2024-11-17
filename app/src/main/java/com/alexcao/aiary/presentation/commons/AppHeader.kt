@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,9 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.alexcao.aiary.ui.theme.InterTypography
-import com.alexcao.aiary.ui.theme.Primary
-import com.alexcao.aiary.ui.theme.PrimaryBackground
 import com.alexcao.aiary.utils.extensions.toTitleCase
 
 @Composable
@@ -32,7 +29,7 @@ fun AppHeader(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = PrimaryBackground,
+                color = MaterialTheme.colorScheme.primaryContainer,
             ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -41,10 +38,7 @@ fun AppHeader(
             text = navHostController.currentDestination?.route
                 ?.substringAfterLast("/")?.toTitleCase()
                 ?: "Unknown",
-            style = InterTypography.titleMedium.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            ),
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(8.dp)
         )
 
@@ -54,7 +48,7 @@ fun AppHeader(
                 Icon(
                     imageVector = Icons.Rounded.Close,
                     contentDescription = "Close button",
-                    tint = Primary
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
         }

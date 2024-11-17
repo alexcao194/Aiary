@@ -4,10 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,7 +23,6 @@ import com.alexcao.aiary.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.aiary.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.aiary.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.aiary.ui.theme.AiaryTheme
-import com.alexcao.aiary.ui.theme.PrimaryBackground
 
 @Composable
 fun HomeScreen(
