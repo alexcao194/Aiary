@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @Entity(
@@ -30,7 +31,7 @@ data class ExpenseInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val label: String,
-    val amount: Double,
+    val amount: BigDecimal,
     val unit: String,
     val date: LocalDate,
     val categoryId: Int,
