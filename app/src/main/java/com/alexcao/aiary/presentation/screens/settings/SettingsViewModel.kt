@@ -44,7 +44,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = it.error) }
+                        state.update { it.copy(error = resource.message) }
                     }
                 }
             }

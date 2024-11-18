@@ -1,5 +1,7 @@
 package com.alexcao.aiary.data.repositories
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import com.alexcao.aiary.core.Resource
 import com.alexcao.aiary.data.data_sources.SystemDatabase
 import com.alexcao.aiary.data.models.Expense
@@ -42,6 +44,8 @@ class ExpenseRepositoryImpl @Inject constructor(
         try {
             systemDatabase.expenseDao().insertExpense(expense.info)
             emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("A category with the same name already exists"))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while adding expense"))
         }
@@ -63,6 +67,8 @@ class ExpenseRepositoryImpl @Inject constructor(
             try {
                 systemDatabase.expenseDao().insertCategory(expenseCategory)
                 emit(Resource.Success(Unit))
+            } catch (e: SQLiteConstraintException) {
+                emit(Resource.Error("A category with the same name already exists"))
             } catch (e: Exception) {
                 emit(Resource.Error("An error occurred while adding category"))
             }
