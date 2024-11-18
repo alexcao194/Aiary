@@ -151,6 +151,7 @@ fun SettingsScreen(
                 initialCategory = currentCategory,
                 onDismissRequest = { isCategoryDialogOpen = false },
                 onSave = { category -> settingsViewModel.saveCategory(category) },
+                onUpdate = { category -> settingsViewModel.updateCategory(category) },
                 onDelete = { category -> settingsViewModel.deleteCategory(category) }
             )
         }
@@ -160,6 +161,7 @@ fun SettingsScreen(
                 initialSource = currentSource,
                 onDismissRequest = { isSourceDialogOpen = false },
                 onSave = { source -> settingsViewModel.saveSource(source) },
+                onUpdate = { source -> settingsViewModel.updateSource(source) },
                 onDelete = { source -> settingsViewModel.deleteSource(source) }
             )
         }

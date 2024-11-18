@@ -1,7 +1,6 @@
 package com.alexcao.aiary.data.repositories
 
 import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import com.alexcao.aiary.core.Resource
 import com.alexcao.aiary.data.data_sources.SystemDatabase
 import com.alexcao.aiary.data.models.Expense
@@ -16,10 +15,13 @@ interface ExpenseRepository {
     fun getExpensesCategory(): Flow<List<ExpenseCategory>>
     fun getExpensesSource(): Flow<List<ExpenseSource>>
     suspend fun addExpense(expense: Expense): Flow<Resource<Unit>>
+    suspend fun updateExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun deleteExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun addCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>>
+    suspend fun updateCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>>
     suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>>
     suspend fun addSource(source: ExpenseSource): Flow<Resource<Unit>>
+    suspend fun updateSource(source: ExpenseSource): Flow<Resource<Unit>>
     suspend fun deleteSource(source: ExpenseSource): Flow<Resource<Unit>>
 }
 
@@ -36,7 +38,7 @@ class ExpenseRepositoryImpl @Inject constructor(
     }
 
     override fun getExpensesSource(): Flow<List<ExpenseSource>> {
-        return systemDatabase.expenseDao().getAllExpenseSources()
+        return systemDatabase.expenseDao().getAllSources()
     }
 
     override suspend fun addExpense(expense: Expense): Flow<Resource<Unit>> = flow {
@@ -48,6 +50,18 @@ class ExpenseRepositoryImpl @Inject constructor(
             emit(Resource.Error("A category with the same name already exists"))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while adding expense"))
+        }
+    }
+
+    override suspend fun updateExpense(expense: Expense): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            systemDatabase.expenseDao().updateExpense(expense.info)
+            emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("A category with the same name already exists"))
+        } catch (e: Exception) {
+            emit(Resource.Error("An error occurred while updating expense"))
         }
     }
 
@@ -74,6 +88,19 @@ class ExpenseRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun updateCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>> =
+        flow {
+            emit(Resource.Loading())
+            try {
+                systemDatabase.expenseDao().updateCategory(expenseCategory)
+                emit(Resource.Success(Unit))
+            } catch (e: SQLiteConstraintException) {
+                emit(Resource.Error("A category with the same name already exists"))
+            } catch (e: Exception) {
+                emit(Resource.Error("An error occurred while updating category"))
+            }
+        }
+
     override suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
@@ -89,8 +116,22 @@ class ExpenseRepositoryImpl @Inject constructor(
         try {
             systemDatabase.expenseDao().insertSource(source)
             emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("A category with the same name already exists"))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while adding source"))
+        }
+    }
+
+    override suspend fun updateSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
+            systemDatabase.expenseDao().updateSource(source)
+            emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("A category with the same name already exists"))
+        } catch (e: Exception) {
+            emit(Resource.Error("An error occurred while updating source"))
         }
     }
 

@@ -28,7 +28,9 @@ class SettingsViewModel @Inject constructor(
                     it.copy(categories = categories)
                 }
             }
+        }
 
+        viewModelScope.launch {
             expenseRepository.getExpensesSource().collect { sources ->
                 _state.update {
                     it.copy(sources = sources)
@@ -51,9 +53,37 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun updateCategory(category: ExpenseCategory) {
+        viewModelScope.launch {
+            expenseRepository.updateCategory(category).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
     fun deleteCategory(category: ExpenseCategory) {
         viewModelScope.launch {
             expenseRepository.deleteCategory(category).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateSource(source: ExpenseSource) {
+        viewModelScope.launch {
+            expenseRepository.updateSource(source).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {}

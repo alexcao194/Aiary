@@ -14,6 +14,7 @@ fun CategoryDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onSave: (ExpenseCategory) -> Unit,
+    onUpdate: (ExpenseCategory) -> Unit,
     onDelete: (ExpenseCategory) -> Unit,
     initialCategory: ExpenseCategory? = null
 ) {
@@ -29,8 +30,18 @@ fun CategoryDialog(
         modifier = modifier,
         onDismissRequest = { onDismissRequest() },
         onChange = { name, color -> category = category.copy(name = name, tint = color) },
-        onSave = { onSave(category) },
-        onDelete = if (initialCategory != null) { { onDelete(category) } } else { null },
+        onSave = {
+            if (initialCategory != null) {
+                onUpdate(category)
+            } else {
+                onSave(category)
+            }
+        },
+        onDelete = if (initialCategory != null) {
+            { onDelete(category) }
+        } else {
+            null
+        },
         colors = badgeLights,
         label = category.name,
         color = category.tint

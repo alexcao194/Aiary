@@ -65,5 +65,5 @@ interface ExpenseDao {
     fun getAllCategories(): Flow<List<ExpenseCategory>>
 
     @Query("SELECT * FROM ExpenseSource")
-    fun getAllExpenseSources(): Flow<List<ExpenseSource>>
+    fun getAllSources(): Flow<List<ExpenseSource>>
 }

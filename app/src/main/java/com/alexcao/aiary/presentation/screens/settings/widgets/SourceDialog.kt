@@ -14,6 +14,7 @@ fun SourceDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onSave: (ExpenseSource) -> Unit,
+    onUpdate: (ExpenseSource) -> Unit,
     onDelete: (ExpenseSource) -> Unit,
     initialSource: ExpenseSource? = null
 ) {
@@ -29,8 +30,18 @@ fun SourceDialog(
         modifier = modifier,
         onDismissRequest = { onDismissRequest() },
         onChange = { name, color -> source = source.copy(name = name, tint = color) },
-        onSave = { onSave(source) },
-        onDelete = if (initialSource != null) { { onDelete(source) } } else { null },
+        onSave = {
+            if (initialSource != null) {
+                onUpdate(source)
+            } else {
+                onSave(source)
+            }
+        },
+        onDelete = if (initialSource != null) {
+            { onDelete(source) }
+        } else {
+            null
+        },
         colors = badges,
         label = source.name,
         color = source.tint
