@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.alexcao.aiary"
+    namespace = "com.alexcao.dexpense"
     compileSdk = 34
 
     defaultConfig {
