@@ -49,6 +49,7 @@ import com.alexcao.aiary.data.models.ExpenseCategory
 import com.alexcao.aiary.presentation.commons.FilledTextField
 import com.alexcao.aiary.ui.theme.badgeLights
 import com.alexcao.aiary.ui.theme.badges
+import com.alexcao.aiary.utils.requiredValidator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +69,9 @@ fun CategoryDialog(
             )
         )
     }
+
+    var error by remember { mutableStateOf(requiredValidator(category.name)) }
+
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
@@ -91,7 +95,10 @@ fun CategoryDialog(
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
                     value = category.name,
-                    onValueChange = { category = category.copy(name = it) },
+                    onValueChange = {
+                        category = category.copy(name = it)
+                        error = requiredValidator(it)
+                    },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
@@ -167,6 +174,14 @@ fun CategoryDialog(
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 FilledTonalButton(
+                    enabled = error == null,
+                    colors = ButtonDefaults.textButtonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                            alpha = 0.5f
+                        ),
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
                     onClick = {
                         onDismissRequest()
                         if (initialCategory != null)

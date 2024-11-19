@@ -88,7 +88,8 @@ private val darkScheme = darkColorScheme(
 
 @Composable
 fun AiaryTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+//    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable() () -> Unit
 ) {
 

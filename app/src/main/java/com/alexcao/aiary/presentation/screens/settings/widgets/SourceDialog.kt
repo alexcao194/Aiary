@@ -49,6 +49,7 @@ import com.alexcao.aiary.R
 import com.alexcao.aiary.data.models.ExpenseSource
 import com.alexcao.aiary.presentation.commons.FilledTextField
 import com.alexcao.aiary.ui.theme.badges
+import com.alexcao.aiary.utils.requiredValidator
 import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,6 +71,9 @@ fun SourceDialog(
             )
         )
     }
+
+    var error by remember { mutableStateOf(requiredValidator(source.name)) }
+
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
@@ -93,7 +97,10 @@ fun SourceDialog(
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
                     value = source.name,
-                    onValueChange = { source = source.copy(name = it) },
+                    onValueChange = {
+                        source = source.copy(name = it)
+                        error = requiredValidator(it)
+                    },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
@@ -185,6 +192,14 @@ fun SourceDialog(
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
+                            alpha = 0.5f
+                        ),
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    enabled = error == null,
                     onClick = {
                         onDismissRequest()
                         if (initialSource != null)
