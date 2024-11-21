@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -23,6 +24,7 @@ import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.dexpense.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.dexpense.ui.theme.DexpenseTheme
+import java.time.LocalDate
 
 @Composable
 fun HomeScreen(
@@ -34,7 +36,12 @@ fun HomeScreen(
     val selectedPage = state.selectedPage
     val selectedMonth = state.selectedMonth
     val expenses = state.expenses
+    val sources = state.sources
+    val categories = state.categories
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
+    var currentDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
 
     val pagerState = rememberPagerState(
         initialPage = selectedPage,
@@ -74,8 +81,9 @@ fun HomeScreen(
                 when (page) {
                     0 -> ExpensePage(
                         expenses = expenses,
-                        onAddExpense = {
+                        onAddExpense = { date ->
                             isDialogOpen = true
+                            currentDate = date
                         }
                     )
                     1 -> ExpensePage(expenses = expenses)
@@ -89,9 +97,12 @@ fun HomeScreen(
                     isDialogOpen = false
                 },
                 onSave = {
-                    homeViewModel.onSaveExpense()
+                    homeViewModel.onSaveExpense(it)
                 },
-                expense = null
+                initialExpense = null,
+                localDate = currentDate,
+                sources = sources,
+                categories = categories
             )
         }
     }

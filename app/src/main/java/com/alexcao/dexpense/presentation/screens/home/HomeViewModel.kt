@@ -3,6 +3,8 @@ package com.alexcao.dexpense.presentation.screens.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexcao.dexpense.core.Resource
+import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,21 @@ class HomeViewModel @Inject constructor(
             }
         }
 
+        viewModelScope.launch {
+            expenseRepository.getExpensesCategory().collect { categories ->
+                _state.update {
+                    it.copy(categories = categories)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            expenseRepository.getExpensesSource().collect { sources ->
+                _state.update {
+                    it.copy(sources = sources)
+                }
+            }
+        }
     }
 
     fun onMonthSelected(month: Int) {
@@ -49,7 +66,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onSaveExpense() {
-
+    fun onSaveExpense(expense: Expense) {
+        viewModelScope.launch {
+            expenseRepository.addExpense(expense = expense).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        _state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
     }
 }

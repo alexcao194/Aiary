@@ -9,6 +9,7 @@ import com.alexcao.dexpense.data.models.ExpenseSource
 import com.alexcao.dexpense.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class SettingsViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository
 ) : ViewModel() {
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(SettingsState())
-    val state: MutableStateFlow<SettingsState> = _state
+    val state: StateFlow<SettingsState> = _state
 
     init {
         viewModelScope.launch {
@@ -46,7 +47,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -60,7 +61,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -74,7 +75,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -88,7 +89,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -102,7 +103,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -116,7 +117,7 @@ class SettingsViewModel @Inject constructor(
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
                     is Resource.Error -> {
-                        state.update { it.copy(error = resource.message) }
+                        _state.update { it.copy(error = resource.message) }
                     }
                 }
             }
@@ -124,6 +125,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun clearError() {
-        state.update { it.copy(error = null) }
+        _state.update { it.copy(error = null) }
     }
 }

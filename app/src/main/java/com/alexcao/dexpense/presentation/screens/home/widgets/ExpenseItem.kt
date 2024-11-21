@@ -61,9 +61,15 @@ fun ExpenseItem(
             }
         }
         Row {
-            BadgeChip(label = "Transport", color = Color(0xFFE9E9E9))
+            BadgeChip(
+                label = expense.category.name,
+                color = expense.category.tint
+            )
             Spacer(modifier = Modifier.padding(8.dp))
-            BadgeChip(label = "Cash", color = Color(0xFFE9E9E9))
+            BadgeChip(
+                label = expense.expenseSource.name,
+                color = expense.expenseSource.tint
+            )
         }
     }
 }

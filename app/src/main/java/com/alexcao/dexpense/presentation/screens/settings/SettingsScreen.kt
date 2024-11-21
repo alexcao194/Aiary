@@ -123,26 +123,6 @@ fun SettingsScreen(
                         }
                     )
                 }
-                Spacer(modifier = Modifier.padding(16.dp))
-                Text(
-                    text = "Unit",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-                FlowRow {
-                    for (i in 0..5) {
-                        BadgeChip(
-                            modifier = Modifier.padding(4.dp),
-                            label = "VND",
-                            color = badgeLights[i]
-                        )
-                    }
-                    BadgeChip(
-                        modifier = Modifier.padding(4.dp),
-                        label = "+",
-                        color = badgeLights[6],
-                    )
-                }
             }
         }
 

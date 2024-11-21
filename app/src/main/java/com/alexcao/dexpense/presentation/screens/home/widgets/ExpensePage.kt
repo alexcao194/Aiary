@@ -27,7 +27,7 @@ import java.util.Locale
 fun ExpensePage(
     modifier: Modifier = Modifier,
     expenses: List<Expense>,
-    onAddExpense: () -> Unit = {}
+    onAddExpense: (LocalDate) -> Unit = {}
 ) {
     val currentDate = LocalDate.now()
     val currentDay = currentDate.dayOfMonth
@@ -58,7 +58,7 @@ fun ExpensePage(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
-                    onClick = { onAddExpense() }
+                    onClick = { onAddExpense(daysInMonth[index]) }
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Add,
