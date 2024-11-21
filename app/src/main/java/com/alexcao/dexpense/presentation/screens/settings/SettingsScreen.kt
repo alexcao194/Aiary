@@ -30,7 +30,6 @@ import com.alexcao.dexpense.presentation.screens.home.widgets.BadgeChip
 import com.alexcao.dexpense.presentation.screens.settings.widgets.CategoryDialog
 import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceDialog
 import com.alexcao.dexpense.ui.theme.badgeOther
-import com.alexcao.dexpense.ui.theme.badgeOtherLight
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -76,7 +75,6 @@ fun SettingsScreen(
                             modifier = Modifier.padding(4.dp),
                             label = category.name,
                             color = category.tint,
-                            isLight = true,
                             onClick = {
                                 isCategoryDialogOpen = true
                                 currentCategory = category
@@ -86,8 +84,7 @@ fun SettingsScreen(
                     BadgeChip(
                         modifier = Modifier.padding(4.dp),
                         label = "+",
-                        color = badgeOtherLight,
-                        isLight = true,
+                        color = badgeOther,
                         onClick = {
                             isCategoryDialogOpen = true
                             currentCategory = null
@@ -147,7 +144,6 @@ fun SettingsScreen(
 
         LaunchedEffect(error) {
             error?.let {
-                Log.d("TAG", "SettingsScreen: $it")
                 snackbarHostState.showSnackbar(it)
                 settingsViewModel.clearError()
             }

@@ -74,26 +74,6 @@ val surfaceContainerDark = Color(0xFF261D1F)
 val surfaceContainerHighDark = Color(0xFF312829)
 val surfaceContainerHighestDark = Color(0xFF3C3234)
 
-val badgePinkLight = Color(0xFFFFCFC9)
-val badgeBrownLight = Color(0xFFFFC8AA)
-val badgeYellowLight = Color(0xFFFFE5A0)
-val badgeGreenLight = Color(0xFFD4EDBC)
-val badgeBlueLight = Color(0xFFBFE1F6)
-val badgePurpleLight = Color(0xFFE6CFF2)
-val badgeSapphireLight = Color(0xFFC6DBE1)
-val badgeOtherLight = Color(0xFFE6E6E6)
-
-val badgeLights: List<Color> = listOf(
-    badgePinkLight,
-    badgeBrownLight,
-    badgeYellowLight,
-    badgeGreenLight,
-    badgeBlueLight,
-    badgePurpleLight,
-    badgeSapphireLight,
-    badgeOtherLight
-)
-
 val badgePink = Color(0xFFB10202)
 val badgeBrown = Color(0xFF753800)
 val badgeYellow = Color(0xFF473822)
@@ -101,9 +81,9 @@ val badgeGreen = Color(0xFF11734B)
 val badgeBlue = Color(0xFF0A53A8)
 val badgePurple = Color(0xFF215A6C)
 val badgeSapphire = Color(0xFF5A3286)
-val badgeOther = Color(0xFF3D3D3D)
+val badgeOther = Color(0xFF6B6B6B)
 
-val badges: List<Color> = listOf(
+val badgeColors: List<Color> = listOf(
     badgePink,
     badgeBrown,
     badgeYellow,

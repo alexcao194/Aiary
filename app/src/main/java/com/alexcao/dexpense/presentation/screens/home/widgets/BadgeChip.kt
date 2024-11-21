@@ -18,7 +18,6 @@ fun BadgeChip(
     color: Color,
     label: String,
     onClick: () -> Unit = {},
-    isLight: Boolean = false
 ) {
     Button(
         modifier = modifier.height(28.dp),
@@ -32,11 +31,7 @@ fun BadgeChip(
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall.copy(
-                color =
-                if (isLight)
-                    MaterialTheme.colorScheme.onSurface
-                else
-                    MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimary
             )
         )
     }

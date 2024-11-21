@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -48,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
-import com.alexcao.dexpense.ui.theme.badges
+import com.alexcao.dexpense.ui.theme.badgeColors
 import com.alexcao.dexpense.utils.requiredValidator
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +66,7 @@ fun SourceDialog(
         mutableStateOf(
             initialSourceInfo ?: SourceInfo(
                 name = "",
-                tint = badges.first(),
+                tint = badgeColors.first(),
             )
         )
     }
@@ -127,7 +128,7 @@ fun SourceDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyRow {
-                    items(badges) { badgeColor ->
+                    items(badgeColors) { badgeColor ->
                         Box(
                             modifier = Modifier
                                 .padding(4.dp)
@@ -144,6 +145,7 @@ fun SourceDialog(
                                 Icon(
                                     imageVector = Icons.Rounded.Check,
                                     contentDescription = "Selected",
+                                    tint = Color.White
                                 )
                             }
                         }
