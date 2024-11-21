@@ -10,16 +10,16 @@ import java.time.LocalDate
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = ExpenseInfo::class,
+            entity = Category::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey(
-            entity = ExpenseInfo::class,
+            entity = SourceInfo::class,
             parentColumns = ["id"],
             childColumns = ["expenseSourceId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         )
     ],
     indices = [

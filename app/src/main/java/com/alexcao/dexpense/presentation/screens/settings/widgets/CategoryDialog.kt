@@ -45,7 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
-import com.alexcao.dexpense.data.models.ExpenseCategory
+import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeLights
 import com.alexcao.dexpense.utils.requiredValidator
@@ -55,14 +55,14 @@ import com.alexcao.dexpense.utils.requiredValidator
 fun CategoryDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onSave: (ExpenseCategory) -> Unit,
-    onUpdate: (ExpenseCategory) -> Unit,
-    onDelete: (ExpenseCategory) -> Unit,
-    initialCategory: ExpenseCategory? = null
+    onSave: (Category) -> Unit,
+    onUpdate: (Category) -> Unit,
+    onDelete: (Category) -> Unit,
+    initialCategory: Category? = null
 ) {
     var category by remember {
         mutableStateOf(
-            initialCategory ?: ExpenseCategory(
+            initialCategory ?: Category(
                 name = "",
                 tint = badgeLights.first()
             )

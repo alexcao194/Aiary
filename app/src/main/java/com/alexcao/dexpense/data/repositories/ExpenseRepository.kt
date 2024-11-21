@@ -1,28 +1,29 @@
 package com.alexcao.dexpense.data.repositories
 
 import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import com.alexcao.dexpense.core.Resource
 import com.alexcao.dexpense.data.data_sources.SystemDatabase
 import com.alexcao.dexpense.data.models.Expense
-import com.alexcao.dexpense.data.models.ExpenseCategory
-import com.alexcao.dexpense.data.models.ExpenseSource
+import com.alexcao.dexpense.data.models.Category
+import com.alexcao.dexpense.data.models.SourceInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface ExpenseRepository {
     fun getExpenses(month: Int?): Flow<List<Expense>>
-    fun getExpensesCategory(): Flow<List<ExpenseCategory>>
-    fun getExpensesSource(): Flow<List<ExpenseSource>>
+    fun getExpensesCategory(): Flow<List<Category>>
+    fun getExpensesSource(): Flow<List<SourceInfo>>
     suspend fun addExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun updateExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun deleteExpense(expense: Expense): Flow<Resource<Unit>>
-    suspend fun addCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>>
-    suspend fun updateCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>>
-    suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>>
-    suspend fun addSource(source: ExpenseSource): Flow<Resource<Unit>>
-    suspend fun updateSource(source: ExpenseSource): Flow<Resource<Unit>>
-    suspend fun deleteSource(source: ExpenseSource): Flow<Resource<Unit>>
+    suspend fun addCategory(category: Category): Flow<Resource<Unit>>
+    suspend fun updateCategory(category: Category): Flow<Resource<Unit>>
+    suspend fun deleteCategory(category: Category): Flow<Resource<Unit>>
+    suspend fun addSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
+    suspend fun updateSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
+    suspend fun deleteSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
 }
 
 class ExpenseRepositoryImpl @Inject constructor(
@@ -33,11 +34,11 @@ class ExpenseRepositoryImpl @Inject constructor(
             .expenseDao()
             .getExpensesByMonth(month.toString())
 
-    override fun getExpensesCategory(): Flow<List<ExpenseCategory>> {
-        return systemDatabase.expenseDao().getAllCategories()
+    override fun getExpensesCategory(): Flow<List<Category>> {
+        return systemDatabase.categoryDao().getAllCategories()
     }
 
-    override fun getExpensesSource(): Flow<List<ExpenseSource>> {
+    override fun getExpensesSource(): Flow<List<SourceInfo>> {
         return systemDatabase.expenseDao().getAllSources()
     }
 
@@ -75,11 +76,11 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>> =
+    override suspend fun addCategory(category: Category): Flow<Resource<Unit>> =
         flow {
             emit(Resource.Loading())
             try {
-                systemDatabase.expenseDao().insertCategory(expenseCategory)
+                systemDatabase.categoryDao().insertCategory(category)
                 emit(Resource.Success(Unit))
             } catch (e: SQLiteConstraintException) {
                 emit(Resource.Error("A category with the same name already exists"))
@@ -88,11 +89,11 @@ class ExpenseRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun updateCategory(expenseCategory: ExpenseCategory): Flow<Resource<Unit>> =
+    override suspend fun updateCategory(category: Category): Flow<Resource<Unit>> =
         flow {
             emit(Resource.Loading())
             try {
-                systemDatabase.expenseDao().updateCategory(expenseCategory)
+                systemDatabase.categoryDao().updateCategory(category)
                 emit(Resource.Success(Unit))
             } catch (e: SQLiteConstraintException) {
                 emit(Resource.Error("A category with the same name already exists"))
@@ -101,20 +102,22 @@ class ExpenseRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteCategory(category: ExpenseCategory): Flow<Resource<Unit>> = flow {
+    override suspend fun deleteCategory(category: Category): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.expenseDao().deleteCategory(category)
+            systemDatabase.categoryDao().deleteCategory(category)
             emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("An expense that uses this category exists"))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while deleting category"))
         }
     }
 
-    override suspend fun addSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+    override suspend fun addSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.expenseDao().insertSource(source)
+            systemDatabase.sourceDao().insertSource(sourceInfo)
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -123,10 +126,10 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+    override suspend fun updateSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.expenseDao().updateSource(source)
+            systemDatabase.sourceDao().updateSource(sourceInfo)
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -135,12 +138,15 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteSource(source: ExpenseSource): Flow<Resource<Unit>> = flow {
+    override suspend fun deleteSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.expenseDao().deleteSource(source)
+            systemDatabase.sourceDao().deleteSource(sourceInfo)
             emit(Resource.Success(Unit))
+        } catch (e: SQLiteConstraintException) {
+            emit(Resource.Error("A expense that uses this source exists"))
         } catch (e: Exception) {
+            Log.d("TAG", "deleteSource: $e")
             emit(Resource.Error("An error occurred while deleting source"))
         }
     }

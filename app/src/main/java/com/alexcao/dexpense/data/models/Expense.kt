@@ -11,11 +11,11 @@ data class Expense(
         parentColumn = "categoryId",
         entityColumn = "id"
     )
-    val category: ExpenseCategory,
+    val category: Category,
 
     @Relation(
         parentColumn = "expenseSourceId",
         entityColumn = "id"
     )
-    val expenseSource: ExpenseSource
+    val sourceInfo: SourceInfo
 )

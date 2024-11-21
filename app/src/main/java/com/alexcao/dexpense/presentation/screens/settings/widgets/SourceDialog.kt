@@ -46,33 +46,31 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
-import com.alexcao.dexpense.data.models.ExpenseSource
+import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badges
 import com.alexcao.dexpense.utils.requiredValidator
-import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SourceDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onSave: (ExpenseSource) -> Unit,
-    onUpdate: (ExpenseSource) -> Unit,
-    onDelete: (ExpenseSource) -> Unit,
-    initialSource: ExpenseSource? = null
+    onSave: (SourceInfo) -> Unit,
+    onUpdate: (SourceInfo) -> Unit,
+    onDelete: (SourceInfo) -> Unit,
+    initialSourceInfo: SourceInfo? = null
 ) {
-    var source by remember {
+    var sourceInfo by remember {
         mutableStateOf(
-            initialSource ?: ExpenseSource(
+            initialSourceInfo ?: SourceInfo(
                 name = "",
                 tint = badges.first(),
-                amount = BigDecimal.ZERO
             )
         )
     }
 
-    var error by remember { mutableStateOf(requiredValidator(source.name)) }
+    var error by remember { mutableStateOf(requiredValidator(sourceInfo.name)) }
 
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
@@ -96,9 +94,9 @@ fun SourceDialog(
             ) {
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
-                    value = source.name,
+                    value = sourceInfo.name,
                     onValueChange = {
-                        source = source.copy(name = it)
+                        sourceInfo = sourceInfo.copy(name = it)
                         error = requiredValidator(it)
                     },
                     hint = stringResource(R.string.label_hint),
@@ -114,8 +112,8 @@ fun SourceDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
-                    value = source.amount.toString(),
-                    onValueChange = { source = source.copy(amount = it.toBigDecimal()) },
+                    value = "source.amount.toString()",
+                    onValueChange = {  },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
@@ -137,12 +135,12 @@ fun SourceDialog(
                                 .background(color = badgeColor)
                                 .size(32.dp)
                                 .clickable {
-                                    source = source.copy(tint = badgeColor)
+                                    sourceInfo = sourceInfo.copy(tint = badgeColor)
                                 },
 
                             contentAlignment = Alignment.Center
                         ) {
-                            if (badgeColor.toArgb() == source.tint.toArgb()) {
+                            if (badgeColor.toArgb() == sourceInfo.tint.toArgb()) {
                                 Icon(
                                     imageVector = Icons.Rounded.Check,
                                     contentDescription = "Selected",
@@ -158,14 +156,14 @@ fun SourceDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                if (initialSource != null) FilledTonalButton(
+                if (initialSourceInfo != null) FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         containerColor = MaterialTheme.colorScheme.errorContainer
                     ),
                     onClick = {
                         onDismissRequest()
-                        onDelete(source)
+                        onDelete(sourceInfo)
                     }
                 ) {
                     Text(
@@ -202,10 +200,10 @@ fun SourceDialog(
                     enabled = error == null,
                     onClick = {
                         onDismissRequest()
-                        if (initialSource != null)
-                            onUpdate(source)
+                        if (initialSourceInfo != null)
+                            onUpdate(sourceInfo)
                         else
-                            onSave(source)
+                            onSave(sourceInfo)
                     }
                 ) {
                     Text(

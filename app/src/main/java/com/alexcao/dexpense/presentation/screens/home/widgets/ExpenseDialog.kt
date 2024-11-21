@@ -34,9 +34,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
-import com.alexcao.dexpense.data.models.ExpenseCategory
+import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
-import com.alexcao.dexpense.data.models.ExpenseSource
+import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.utils.requiredValidator
 import java.math.BigDecimal
@@ -48,8 +48,8 @@ fun ExpenseDialog(
     modifier: Modifier = Modifier,
     localDate: LocalDate,
     initialExpense: Expense? = null,
-    sources: List<ExpenseSource>,
-    categories: List<ExpenseCategory>,
+    sourceInfos: List<SourceInfo>,
+    categories: List<Category>,
     onDismissRequest: () -> Unit,
     onSave: (Expense) -> Unit,
 ) {
@@ -59,10 +59,10 @@ fun ExpenseDialog(
     ) {
         var expense by remember {
             mutableStateOf(initialExpense ?: Expense(
-                expenseSource = sources.first(),
+                sourceInfo = sourceInfos.first(),
                 category = categories.first(),
                 info = ExpenseInfo(
-                    expenseSourceId = sources.first().id,
+                    expenseSourceId = sourceInfos.first().id,
                     categoryId = categories.first().id,
                     amount = BigDecimal(0.0),
                     unit = "VND",
@@ -142,8 +142,8 @@ fun ExpenseDialog(
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
                     BadgeChip(
-                        label = expense.expenseSource.name,
-                        color = expense.expenseSource.tint
+                        label = expense.sourceInfo.name,
+                        color = expense.sourceInfo.tint
                     )
                 }
             }

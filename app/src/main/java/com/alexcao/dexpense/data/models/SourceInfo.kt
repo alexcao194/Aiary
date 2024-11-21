@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["name"], unique = true)])
-data class ExpenseCategory(
+data class SourceInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,

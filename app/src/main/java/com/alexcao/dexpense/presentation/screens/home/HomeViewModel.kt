@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             expenseRepository.getExpensesSource().collect { sources ->
                 _state.update {
-                    it.copy(sources = sources)
+                    it.copy(sourceInfos = sources)
                 }
             }
         }

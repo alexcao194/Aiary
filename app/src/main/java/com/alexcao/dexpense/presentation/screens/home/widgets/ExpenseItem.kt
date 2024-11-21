@@ -67,8 +67,8 @@ fun ExpenseItem(
             )
             Spacer(modifier = Modifier.padding(8.dp))
             BadgeChip(
-                label = expense.expenseSource.name,
-                color = expense.expenseSource.tint
+                label = expense.sourceInfo.name,
+                color = expense.sourceInfo.tint
             )
         }
     }
