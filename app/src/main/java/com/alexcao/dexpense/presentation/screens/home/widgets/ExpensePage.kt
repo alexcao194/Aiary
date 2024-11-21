@@ -1,5 +1,6 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +28,8 @@ import java.util.Locale
 fun ExpensePage(
     modifier: Modifier = Modifier,
     expenses: List<Expense>,
-    onAddExpense: (LocalDate) -> Unit = {}
+    onAddExpense: (LocalDate) -> Unit = {},
+    onPickExpense: (Expense) -> Unit = {}
 ) {
     val currentDate = LocalDate.now()
     val currentDay = currentDate.dayOfMonth
@@ -68,7 +70,11 @@ fun ExpensePage(
                 }
             }
             for (expense in expensesInDay) {
-                ExpenseItem(expense = expense)
+                ExpenseItem(
+                    modifier = Modifier
+                        .clickable { onPickExpense(expense) },
+                    expense = expense
+                )
             }
         }
     }

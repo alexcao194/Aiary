@@ -79,4 +79,32 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun onDeleteExpense(expense: Expense) {
+        viewModelScope.launch {
+            expenseRepository.deleteExpense(expense = expense).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        _state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
+
+    fun onUpdateExpense(expense: Expense) {
+        viewModelScope.launch {
+            expenseRepository.updateExpense(expense = expense).collect { resource ->
+                when (resource) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {}
+                    is Resource.Error -> {
+                        _state.update { it.copy(error = resource.message) }
+                    }
+                }
+            }
+        }
+    }
 }

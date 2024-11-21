@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.presentation.navigation.Route
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
@@ -42,6 +43,7 @@ fun HomeScreen(
     var currentDate by remember {
         mutableStateOf(LocalDate.now())
     }
+    var currentExpense: Expense? = null
 
     val pagerState = rememberPagerState(
         initialPage = selectedPage,
@@ -84,9 +86,27 @@ fun HomeScreen(
                         onAddExpense = { date ->
                             isDialogOpen = true
                             currentDate = date
+                            currentExpense = null
+                        },
+                        onPickExpense = { expenses ->
+                            isDialogOpen = true
+                            currentDate = expenses.info.date
+                            currentExpense = expenses
                         }
                     )
-                    1 -> ExpensePage(expenses = expenses)
+                    1 -> ExpensePage(
+                        expenses = expenses,
+                        onAddExpense = { date ->
+                            isDialogOpen = true
+                            currentDate = date
+                            currentExpense = null
+                        },
+                        onPickExpense = { expenses ->
+                            isDialogOpen = true
+                            currentDate = expenses.info.date
+                            currentExpense = expenses
+                        }
+                    )
                 }
             }
         }
@@ -96,10 +116,16 @@ fun HomeScreen(
                 onDismissRequest = {
                     isDialogOpen = false
                 },
-                onSave = {
-                    homeViewModel.onSaveExpense(it)
+                onSave = { expense ->
+                    homeViewModel.onSaveExpense(expense)
                 },
-                initialExpense = null,
+                onDelete = { expense ->
+                    homeViewModel.onDeleteExpense(expense)
+                },
+                onUpdate = { expense ->
+                    homeViewModel.onUpdateExpense(expense)
+                },
+                initialExpense = currentExpense,
                 localDate = currentDate,
                 sourceInfos = sources,
                 categories = categories

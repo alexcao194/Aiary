@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
@@ -52,24 +53,28 @@ fun ExpenseDialog(
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onSave: (Expense) -> Unit,
+    onUpdate: (Expense) -> Unit,
+    onDelete: (Expense) -> Unit
 ) {
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
     ) {
         var expense by remember {
-            mutableStateOf(initialExpense ?: Expense(
-                sourceInfo = sourceInfos.first(),
-                category = categories.first(),
-                info = ExpenseInfo(
-                    expenseSourceId = sourceInfos.first().id,
-                    categoryId = categories.first().id,
-                    amount = BigDecimal(0.0),
-                    unit = "VND",
-                    label = "",
-                    date = localDate,
+            mutableStateOf(
+                initialExpense ?: Expense(
+                    sourceInfo = sourceInfos.first(),
+                    category = categories.first(),
+                    info = ExpenseInfo(
+                        expenseSourceId = sourceInfos.first().id,
+                        categoryId = categories.first().id,
+                        amount = BigDecimal(0.0),
+                        unit = "VND",
+                        label = "",
+                        date = localDate,
+                    )
                 )
-            ))
+            )
         }
 
         var labelError = requiredValidator(expense.info.label)
@@ -125,7 +130,8 @@ fun ExpenseDialog(
                         },
                         hint = stringResource(id = R.string.amount_hint),
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Done
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.NumberPassword
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = {
@@ -153,6 +159,24 @@ fun ExpenseDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
+                if (initialExpense != null) FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    onClick = {
+                        onDismissRequest()
+                        onDelete(expense)
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -179,7 +203,11 @@ fun ExpenseDialog(
                     enabled = labelError == null,
                     onClick = {
                         onDismissRequest()
-                        onSave(expense)
+                        if (initialExpense != null) {
+                            onUpdate(expense)
+                        } else {
+                            onSave(expense)
+                        }
                     }
                 ) {
                     Text(
