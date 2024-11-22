@@ -1,4 +1,4 @@
-package com.alexcao.dexpense.presentation.screens.home.widgets
+package com.alexcao.dexpense.presentation.commons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height

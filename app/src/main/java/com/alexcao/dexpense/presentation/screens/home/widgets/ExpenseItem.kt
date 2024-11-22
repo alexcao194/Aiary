@@ -1,6 +1,7 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,13 +18,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
+import com.alexcao.dexpense.presentation.commons.BadgeChip
+import com.alexcao.dexpense.utils.extensions.toCurrency
 
 @Composable
 fun ExpenseItem(
@@ -32,6 +34,7 @@ fun ExpenseItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .padding(vertical = 4.dp)
             .background(
@@ -42,30 +45,23 @@ fun ExpenseItem(
             .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier
-                .defaultMinSize(minWidth = 100.dp)
+            modifier = Modifier.defaultMinSize(minWidth = 100.dp)
         ) {
             Text(
                 text = expense.info.label,
-                style = MaterialTheme.typography.bodyMedium.copy(
+                style = MaterialTheme.typography.titleSmall.copy(
                     color = Color.Black,
+                    fontWeight = FontWeight.Bold
                 )
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.coin),
-                    contentDescription = "Coin icon",
-                    modifier = Modifier.size(16.dp),
-                    tint = Color.Black
-                )
-                Spacer(modifier = Modifier.padding(2.dp))
                 Text(
-                    text = expense.info.amount.toString(),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = Color.Black,
+                    text = expense.info.amount.toString().toCurrency("VND"),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Bold
                     )
                 )

@@ -54,7 +54,6 @@ import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
 import rememberCurrencyVisualTransformation
-import java.math.BigDecimal
 import java.math.BigInteger
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,6 +77,8 @@ fun SourceDialog(
         )
     }
 
+    val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "VND")
+
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
@@ -85,7 +86,6 @@ fun SourceDialog(
         val labelFocusRequester = remember { FocusRequester() }
         val amountFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
-        val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "USD")
 
         LaunchedEffect(Unit) {
             labelFocusRequester.requestFocus()
@@ -126,13 +126,16 @@ fun SourceDialog(
                     value = source.amount.amount.toString(),
                     onValueChange = { value ->
                         val trimmed = value.trimStart('0').trim { it.isDigit().not() }
-                        if (trimmed.isNotBlank()) {
-                            source = source.copy(
-                                amount = source.amount.copy(
-                                    amount = BigInteger(trimmed)
-                                )
-                            )
+                        val amount = if (trimmed.isNotBlank()) {
+                            BigInteger(trimmed)
+                        } else {
+                            BigInteger.ZERO
                         }
+                        source = source.copy(
+                            amount = source.amount.copy(
+                                amount = amount
+                            )
+                        )
                     },
                     hint = stringResource(R.string.amount_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(

@@ -1,6 +1,5 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,9 +16,7 @@ import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,19 +31,23 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
 import com.alexcao.dexpense.data.models.Source
+import com.alexcao.dexpense.presentation.commons.BadgeChip
 import com.alexcao.dexpense.presentation.commons.FilledTextField
-import rememberCurrencyVisualTransformation
-import java.math.BigDecimal
+import com.alexcao.dexpense.utils.extensions.toCurrency
 import java.math.BigInteger
 import java.time.LocalDate
 
@@ -87,8 +88,6 @@ fun ExpenseDialog(
 
         var isOpenCategoryDropdown by remember { mutableStateOf(false) }
         var isOpenSourceDropdown by remember { mutableStateOf(false) }
-
-        val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "USD")
 
         LaunchedEffect(Unit) {
             labelFocusRequester.requestFocus()
@@ -149,7 +148,6 @@ fun ExpenseDialog(
                                 focusManager.clearFocus()
                             }
                         ),
-                        visualTransformation = currencyVisualTransformation
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
