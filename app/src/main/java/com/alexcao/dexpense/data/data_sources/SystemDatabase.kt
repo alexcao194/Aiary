@@ -11,10 +11,11 @@ import com.alexcao.dexpense.core.database.daos.CategoryDao
 import com.alexcao.dexpense.core.database.daos.SourceDao
 import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
+import com.alexcao.dexpense.data.models.SourceAmount
 import com.alexcao.dexpense.data.models.SourceInfo
 
 @Database(
-    entities = [ExpenseInfo::class, Category::class, SourceInfo::class],
+    entities = [ExpenseInfo::class, Category::class, SourceInfo::class, SourceAmount::class],
     version = 1,
     exportSchema = false
 )

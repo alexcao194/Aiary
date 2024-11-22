@@ -6,24 +6,24 @@ import com.alexcao.dexpense.core.Resource
 import com.alexcao.dexpense.data.data_sources.SystemDatabase
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
-import com.alexcao.dexpense.data.models.SourceInfo
+import com.alexcao.dexpense.data.models.Source
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface ExpenseRepository {
     fun getExpenses(month: Int?): Flow<List<Expense>>
-    fun getExpensesCategory(): Flow<List<Category>>
-    fun getExpensesSource(): Flow<List<SourceInfo>>
+    fun getCategories(): Flow<List<Category>>
+    fun getSources(): Flow<List<Source>>
     suspend fun addExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun updateExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun deleteExpense(expense: Expense): Flow<Resource<Unit>>
     suspend fun addCategory(category: Category): Flow<Resource<Unit>>
     suspend fun updateCategory(category: Category): Flow<Resource<Unit>>
     suspend fun deleteCategory(category: Category): Flow<Resource<Unit>>
-    suspend fun addSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
-    suspend fun updateSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
-    suspend fun deleteSource(sourceInfo: SourceInfo): Flow<Resource<Unit>>
+    suspend fun addSource(source: Source): Flow<Resource<Unit>>
+    suspend fun updateSource(source: Source): Flow<Resource<Unit>>
+    suspend fun deleteSource(source: Source): Flow<Resource<Unit>>
 }
 
 class ExpenseRepositoryImpl @Inject constructor(
@@ -34,12 +34,12 @@ class ExpenseRepositoryImpl @Inject constructor(
             .expenseDao()
             .getExpensesByMonth(month.toString())
 
-    override fun getExpensesCategory(): Flow<List<Category>> {
+    override fun getCategories(): Flow<List<Category>> {
         return systemDatabase.categoryDao().getAllCategories()
     }
 
-    override fun getExpensesSource(): Flow<List<SourceInfo>> {
-        return systemDatabase.expenseDao().getAllSources()
+    override fun getSources(): Flow<List<Source>> {
+        return systemDatabase.sourceDao().getAllSources()
     }
 
     override suspend fun addExpense(expense: Expense): Flow<Resource<Unit>> = flow {
@@ -114,10 +114,10 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
+    override suspend fun addSource(source: Source): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.sourceDao().insertSource(sourceInfo)
+            systemDatabase.sourceDao().insertSource(source)
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -126,10 +126,10 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
+    override suspend fun updateSource(source: Source): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.sourceDao().updateSource(sourceInfo)
+            systemDatabase.sourceDao().updateSource(source)
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -138,10 +138,10 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteSource(sourceInfo: SourceInfo): Flow<Resource<Unit>> = flow {
+    override suspend fun deleteSource(source: Source): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
-            systemDatabase.sourceDao().deleteSource(sourceInfo)
+            systemDatabase.sourceDao().deleteSource(source)
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A expense that uses this source exists"))

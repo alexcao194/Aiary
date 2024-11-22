@@ -42,7 +42,4 @@ interface ExpenseDao {
     @Transaction
     @Query("SELECT * FROM ExpenseInfo WHERE strftime('%m', date) = :month")
     fun getExpensesByMonth(month: String): Flow<List<Expense>>
-
-    @Query("SELECT * FROM SourceInfo")
-    fun getAllSources(): Flow<List<SourceInfo>>
 }

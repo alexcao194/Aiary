@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            expenseRepository.getExpensesCategory().collect { categories ->
+            expenseRepository.getCategories().collect { categories ->
                 _state.update {
                     it.copy(categories = categories)
                 }
@@ -46,9 +46,9 @@ class HomeViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            expenseRepository.getExpensesSource().collect { sources ->
+            expenseRepository.getSources().collect { sources ->
                 _state.update {
-                    it.copy(sourceInfos = sources)
+                    it.copy(sources = sources)
                 }
             }
         }

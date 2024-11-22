@@ -47,31 +47,36 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
+import com.alexcao.dexpense.data.models.Source
+import com.alexcao.dexpense.data.models.SourceAmount
 import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
 import com.alexcao.dexpense.utils.requiredValidator
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SourceDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onSave: (SourceInfo) -> Unit,
-    onUpdate: (SourceInfo) -> Unit,
-    onDelete: (SourceInfo) -> Unit,
-    initialSourceInfo: SourceInfo? = null
+    onSave: (Source) -> Unit,
+    onUpdate: (Source) -> Unit,
+    onDelete: (Source) -> Unit,
+    initialSource: Source? = null
 ) {
-    var sourceInfo by remember {
+    var source by remember {
         mutableStateOf(
-            initialSourceInfo ?: SourceInfo(
-                name = "",
-                tint = badgeColors.first(),
+            initialSource ?: Source(
+                info = SourceInfo(
+                    tint = badgeColors.first()
+                ),
+                amount = SourceAmount()
             )
         )
     }
 
-    var error by remember { mutableStateOf(requiredValidator(sourceInfo.name)) }
+    var error by remember { mutableStateOf(requiredValidator(source.info.name)) }
 
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
@@ -95,9 +100,13 @@ fun SourceDialog(
             ) {
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
-                    value = sourceInfo.name,
+                    value = source.info.name,
                     onValueChange = {
-                        sourceInfo = sourceInfo.copy(name = it)
+                        source = source.copy(
+                            info = source.info.copy(
+                                name = it
+                            )
+                        )
                         error = requiredValidator(it)
                     },
                     hint = stringResource(R.string.label_hint),
@@ -113,8 +122,14 @@ fun SourceDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 FilledTextField(
                     modifier = Modifier.focusRequester(labelFocusRequester),
-                    value = "source.amount.toString()",
-                    onValueChange = {  },
+                    value = source.amount.amount.toString(),
+                    onValueChange = {
+                        source = source.copy(
+                            amount = source.amount.copy(
+                                amount = BigDecimal(it)
+                            )
+                        )
+                    },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
@@ -136,12 +151,16 @@ fun SourceDialog(
                                 .background(color = badgeColor)
                                 .size(32.dp)
                                 .clickable {
-                                    sourceInfo = sourceInfo.copy(tint = badgeColor)
+                                    source = source.copy(
+                                        info = source.info.copy(
+                                            tint = badgeColor
+                                        )
+                                    )
                                 },
 
                             contentAlignment = Alignment.Center
                         ) {
-                            if (badgeColor.toArgb() == sourceInfo.tint.toArgb()) {
+                            if (badgeColor.toArgb() == source.info.tint.toArgb()) {
                                 Icon(
                                     imageVector = Icons.Rounded.Check,
                                     contentDescription = "Selected",
@@ -158,14 +177,14 @@ fun SourceDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
-                if (initialSourceInfo != null) FilledTonalButton(
+                if (initialSource != null) FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
                         containerColor = MaterialTheme.colorScheme.errorContainer
                     ),
                     onClick = {
                         onDismissRequest()
-                        onDelete(sourceInfo)
+                        onDelete(source)
                     }
                 ) {
                     Text(
@@ -202,10 +221,10 @@ fun SourceDialog(
                     enabled = error == null,
                     onClick = {
                         onDismissRequest()
-                        if (initialSourceInfo != null)
-                            onUpdate(sourceInfo)
+                        if (initialSource != null)
+                            onUpdate(source)
                         else
-                            onSave(sourceInfo)
+                            onSave(source)
                     }
                 ) {
                     Text(

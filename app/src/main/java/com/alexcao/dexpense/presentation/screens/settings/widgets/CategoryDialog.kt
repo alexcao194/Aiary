@@ -64,7 +64,6 @@ fun CategoryDialog(
     var category by remember {
         mutableStateOf(
             initialCategory ?: Category(
-                name = "",
                 tint = badgeColors.first()
             )
         )

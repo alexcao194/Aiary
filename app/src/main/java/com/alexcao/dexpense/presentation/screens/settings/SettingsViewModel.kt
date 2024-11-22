@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexcao.dexpense.core.Resource
 import com.alexcao.dexpense.data.models.Category
-import com.alexcao.dexpense.data.models.SourceInfo
+import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.data.repositories.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            expenseRepository.getExpensesCategory().collect { categories ->
+            expenseRepository.getCategories().collect { categories ->
                 _state.update {
                     it.copy(categories = categories)
                 }
@@ -32,9 +32,9 @@ class SettingsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            expenseRepository.getExpensesSource().collect { sources ->
+            expenseRepository.getSources().collect { sources ->
                 _state.update {
-                    it.copy(sourceInfos = sources)
+                    it.copy(sources = sources)
                 }
             }
         }
@@ -82,9 +82,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun updateSource(sourceInfo: SourceInfo) {
+    fun updateSource(source: Source) {
         viewModelScope.launch {
-            expenseRepository.updateSource(sourceInfo).collect { resource ->
+            expenseRepository.updateSource(source).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
@@ -96,9 +96,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun saveSource(sourceInfo: SourceInfo) {
+    fun saveSource(source: Source) {
         viewModelScope.launch {
-            expenseRepository.addSource(sourceInfo).collect { resource ->
+            expenseRepository.addSource(source).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {}
@@ -110,9 +110,9 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun deleteSource(sourceInfo: SourceInfo) {
+    fun deleteSource(source: Source) {
         viewModelScope.launch {
-            expenseRepository.deleteSource(sourceInfo).collect { resource ->
+            expenseRepository.deleteSource(source).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {}

@@ -30,10 +30,10 @@ import java.time.LocalDate
 data class ExpenseInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val label: String,
-    val amount: BigDecimal,
-    val unit: String,
-    val date: LocalDate,
-    val categoryId: Int,
-    val expenseSourceId: Int,
+    val label: String = "",
+    val amount: BigDecimal = BigDecimal.ZERO,
+    val unit: String = "",
+    val date: LocalDate = LocalDate.now(),
+    val categoryId: Int = 0,
+    val expenseSourceId: Int = 0,
 )

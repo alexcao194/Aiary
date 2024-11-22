@@ -2,6 +2,7 @@ package com.alexcao.dexpense.presentation.screens.home
 
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
+import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.data.models.SourceInfo
 
 data class HomeState(
@@ -11,5 +12,5 @@ data class HomeState(
     val selectedMonth: Int = 0,
     val expenses: List<Expense> = emptyList(),
     val categories: List<Category> = emptyList(),
-    val sourceInfos: List<SourceInfo> = emptyList(),
+    val sources: List<Source> = emptyList(),
 )

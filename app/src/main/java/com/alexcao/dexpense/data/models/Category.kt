@@ -9,6 +9,6 @@ import androidx.room.PrimaryKey
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String,
-    val tint: Color,
+    val name: String = "",
+    val tint: Color = Color.Unspecified,
 )

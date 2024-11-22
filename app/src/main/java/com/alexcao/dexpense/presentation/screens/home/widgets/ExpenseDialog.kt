@@ -37,7 +37,7 @@ import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
-import com.alexcao.dexpense.data.models.SourceInfo
+import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.utils.requiredValidator
 import java.math.BigDecimal
@@ -49,7 +49,7 @@ fun ExpenseDialog(
     modifier: Modifier = Modifier,
     localDate: LocalDate,
     initialExpense: Expense? = null,
-    sourceInfos: List<SourceInfo>,
+    sources: List<Source>,
     categories: List<Category>,
     onDismissRequest: () -> Unit,
     onSave: (Expense) -> Unit,
@@ -63,14 +63,11 @@ fun ExpenseDialog(
         var expense by remember {
             mutableStateOf(
                 initialExpense ?: Expense(
-                    sourceInfo = sourceInfos.first(),
+                    sourceInfo = sources.first().info,
                     category = categories.first(),
                     info = ExpenseInfo(
-                        expenseSourceId = sourceInfos.first().id,
+                        expenseSourceId = sources.first().info.id,
                         categoryId = categories.first().id,
-                        amount = BigDecimal(0.0),
-                        unit = "VND",
-                        label = "",
                         date = localDate,
                     )
                 )

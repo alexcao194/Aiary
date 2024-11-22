@@ -37,7 +37,7 @@ fun HomeScreen(
     val selectedPage = state.selectedPage
     val selectedMonth = state.selectedMonth
     val expenses = state.expenses
-    val sources = state.sourceInfos
+    val sources = state.sources
     val categories = state.categories
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
     var currentDate by remember {
@@ -127,7 +127,7 @@ fun HomeScreen(
                 },
                 initialExpense = currentExpense,
                 localDate = currentDate,
-                sourceInfos = sources,
+                sources = sources,
                 categories = categories
             )
         }

@@ -1,6 +1,5 @@
 package com.alexcao.dexpense.presentation.screens.settings
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexcao.dexpense.data.models.Category
-import com.alexcao.dexpense.data.models.SourceInfo
+import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.AppHeader
 import com.alexcao.dexpense.presentation.screens.home.widgets.BadgeChip
 import com.alexcao.dexpense.presentation.screens.settings.widgets.CategoryDialog
@@ -40,14 +39,14 @@ fun SettingsScreen(
 ) {
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories
-    val sources = state.sourceInfos
+    val sources = state.sources
     val error = state.error
 
     val snackbarHostState = remember { SnackbarHostState() }
     var isCategoryDialogOpen by rememberSaveable { mutableStateOf(false) }
     var isSourceDialogOpen by rememberSaveable { mutableStateOf(false) }
     var currentCategory: Category? = null
-    var currentSourceInfo: SourceInfo? = null
+    var currentSource: Source? = null
 
     Scaffold(
         modifier = modifier,
@@ -101,11 +100,11 @@ fun SettingsScreen(
                     for (source in sources) {
                         BadgeChip(
                             modifier = Modifier.padding(4.dp),
-                            label = source.name,
-                            color = source.tint,
+                            label = source.info.name,
+                            color = source.info.tint,
                             onClick = {
                                 isSourceDialogOpen = true
-                                currentSourceInfo = source
+                                currentSource = source
                             }
                         )
                     }
@@ -115,7 +114,7 @@ fun SettingsScreen(
                         color = badgeOther,
                         onClick = {
                             isSourceDialogOpen = true
-                            currentSourceInfo = null
+                            currentSource = null
                         }
                     )
                 }
@@ -134,7 +133,7 @@ fun SettingsScreen(
 
         if (isSourceDialogOpen) {
             SourceDialog(
-                initialSourceInfo = currentSourceInfo,
+                initialSource = currentSource,
                 onDismissRequest = { isSourceDialogOpen = false },
                 onSave = { source -> settingsViewModel.saveSource(source) },
                 onUpdate = { source -> settingsViewModel.updateSource(source) },
