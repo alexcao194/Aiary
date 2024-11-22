@@ -44,12 +44,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
-import com.alexcao.dexpense.utils.requiredValidator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +68,6 @@ fun CategoryDialog(
             )
         )
     }
-
-    var error by remember { mutableStateOf(requiredValidator(category.name)) }
 
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
@@ -96,11 +94,11 @@ fun CategoryDialog(
                     value = category.name,
                     onValueChange = {
                         category = category.copy(name = it)
-                        error = requiredValidator(it)
                     },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Done,
+                        capitalization = KeyboardCapitalization.Sentences
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
@@ -136,10 +134,24 @@ fun CategoryDialog(
             }
             Spacer(modifier = Modifier.height(4.dp))
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
+                FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    onClick = { onDismissRequest() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cancel),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 if (initialCategory != null) FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -157,24 +169,9 @@ fun CategoryDialog(
                         )
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                FilledTonalButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ),
-                    onClick = { onDismissRequest() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
                 Spacer(modifier = Modifier.width(8.dp))
                 FilledTonalButton(
-                    enabled = error == null,
+                    enabled = category.name.isNotBlank(),
                     colors = ButtonDefaults.textButtonColors(
                         disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(
                             alpha = 0.5f

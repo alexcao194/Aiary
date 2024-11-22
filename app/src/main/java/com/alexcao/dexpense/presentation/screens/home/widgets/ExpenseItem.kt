@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,7 +42,8 @@ fun ExpenseItem(
             .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .defaultMinSize(minWidth = 100.dp)
         ) {
             Text(
                 text = expense.info.label,
@@ -68,12 +71,15 @@ fun ExpenseItem(
                 )
             }
         }
-        Row {
+        Spacer(modifier = Modifier.width(8.dp))
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
             BadgeChip(
                 label = expense.category.name,
                 color = expense.category.tint
             )
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             BadgeChip(
                 label = expense.sourceInfo.name,
                 color = expense.sourceInfo.tint

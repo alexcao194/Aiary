@@ -1,7 +1,9 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +16,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
@@ -39,7 +45,6 @@ import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
 import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.FilledTextField
-import com.alexcao.dexpense.utils.requiredValidator
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -74,11 +79,12 @@ fun ExpenseDialog(
             )
         }
 
-        var labelError = requiredValidator(expense.info.label)
-
         val focusManager = LocalFocusManager.current
         val labelFocusRequester = remember { FocusRequester() }
         val amountFocusRequester = remember { FocusRequester() }
+
+        var isOpenCategoryDropdown by remember { mutableStateOf(false) }
+        var isOpenSourceDropdown by remember { mutableStateOf(false) }
 
         LaunchedEffect(Unit) {
             labelFocusRequester.requestFocus()
@@ -94,7 +100,7 @@ fun ExpenseDialog(
                     .padding(16.dp)
             ) {
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(3f),
                 ) {
                     FilledTextField(
                         modifier = Modifier.focusRequester(labelFocusRequester),
@@ -108,7 +114,8 @@ fun ExpenseDialog(
                         },
                         hint = stringResource(R.string.label_hint),
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next
+                            imeAction = ImeAction.Next,
+                            capitalization = KeyboardCapitalization.Sentences
                         ),
                         keyboardActions = KeyboardActions(
                             onNext = { amountFocusRequester.requestFocus() }
@@ -138,16 +145,78 @@ fun ExpenseDialog(
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    BadgeChip(
-                        label = expense.category.name,
-                        color = expense.category.tint
-                    )
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box {
+                        BadgeChip(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = expense.category.name,
+                            color = expense.category.tint,
+                            onClick = {
+                                isOpenCategoryDropdown = true
+                                isOpenSourceDropdown = false
+                            }
+                        )
+
+                        DropdownMenu(
+                            expanded = isOpenCategoryDropdown,
+                            onDismissRequest = { isOpenCategoryDropdown = false }
+                        ) {
+                            categories.forEach { category ->
+                                BadgeChip(
+                                    modifier = Modifier.padding(4.dp),
+                                    label = category.name,
+                                    color = category.tint,
+                                    onClick = {
+                                        expense = expense.copy(
+                                            category = category,
+                                            info = expense.info.copy(
+                                                categoryId = category.id
+                                            )
+                                        )
+                                        isOpenCategoryDropdown = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
-                    BadgeChip(
-                        label = expense.sourceInfo.name,
-                        color = expense.sourceInfo.tint
-                    )
+                    Box {
+                        BadgeChip(
+                            modifier = Modifier.fillMaxWidth(),
+                            label = expense.sourceInfo.name,
+                            color = expense.sourceInfo.tint,
+                            onClick = {
+                                isOpenSourceDropdown = true
+                                isOpenCategoryDropdown = false
+                            }
+                        )
+
+                        DropdownMenu(
+                            expanded = isOpenSourceDropdown,
+                            onDismissRequest = { isOpenSourceDropdown = false },
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ) {
+                            sources.forEach { source ->
+                                BadgeChip(
+                                    modifier = Modifier.padding(4.dp),
+                                    label = source.info.name,
+                                    color = source.info.tint,
+                                    onClick = {
+                                        expense = expense.copy(
+                                            sourceInfo = source.info,
+                                            info = expense.info.copy(
+                                                expenseSourceId = source.info.id
+                                            )
+                                        )
+                                        isOpenSourceDropdown = false
+                                    }
+                                )
+                            }
+                        }
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(4.dp))
@@ -156,6 +225,21 @@ fun ExpenseDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
+                FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    onClick = { onDismissRequest() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cancel),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 if (initialExpense != null) FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -173,21 +257,6 @@ fun ExpenseDialog(
                         )
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                FilledTonalButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ),
-                    onClick = { onDismissRequest() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
                 Spacer(modifier = Modifier.width(8.dp))
                 FilledTonalButton(
                     colors = ButtonDefaults.filledTonalButtonColors(
@@ -197,7 +266,7 @@ fun ExpenseDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = labelError == null,
+                    enabled = expense.info.label.isNotBlank(),
                     onClick = {
                         onDismissRequest()
                         if (initialExpense != null) {

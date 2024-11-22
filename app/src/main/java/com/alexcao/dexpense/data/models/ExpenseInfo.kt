@@ -32,7 +32,6 @@ data class ExpenseInfo(
     val id: Int = 0,
     val label: String = "",
     val amount: BigDecimal = BigDecimal.ZERO,
-    val unit: String = "",
     val date: LocalDate = LocalDate.now(),
     val categoryId: Int = 0,
     val expenseSourceId: Int = 0,

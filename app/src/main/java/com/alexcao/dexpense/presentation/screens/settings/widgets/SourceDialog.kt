@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
@@ -52,7 +53,6 @@ import com.alexcao.dexpense.data.models.SourceAmount
 import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
-import com.alexcao.dexpense.utils.requiredValidator
 import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,13 +76,12 @@ fun SourceDialog(
         )
     }
 
-    var error by remember { mutableStateOf(requiredValidator(source.info.name)) }
-
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = { onDismissRequest() }
     ) {
         val labelFocusRequester = remember { FocusRequester() }
+        val amountFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
         LaunchedEffect(Unit) {
@@ -107,21 +106,20 @@ fun SourceDialog(
                                 name = it
                             )
                         )
-                        error = requiredValidator(it)
                     },
                     hint = stringResource(R.string.label_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = ImeAction.Next,
+                        capitalization = KeyboardCapitalization.Sentences
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            focusManager.clearFocus()
+                            amountFocusRequester.requestFocus()
                         }
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 FilledTextField(
-                    modifier = Modifier.focusRequester(labelFocusRequester),
                     value = source.amount.amount.toString(),
                     onValueChange = {
                         source = source.copy(
@@ -130,7 +128,7 @@ fun SourceDialog(
                             )
                         )
                     },
-                    hint = stringResource(R.string.label_hint),
+                    hint = stringResource(R.string.amount_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Number
@@ -177,6 +175,21 @@ fun SourceDialog(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
             ) {
+                FilledTonalButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    onClick = { onDismissRequest() }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.cancel),
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
                 if (initialSource != null) FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -194,21 +207,6 @@ fun SourceDialog(
                         )
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                FilledTonalButton(
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ),
-                    onClick = { onDismissRequest() }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.cancel),
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                }
                 Spacer(modifier = Modifier.width(8.dp))
                 FilledTonalButton(
                     colors = ButtonDefaults.textButtonColors(
@@ -218,7 +216,7 @@ fun SourceDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = error == null,
+                    enabled = source.info.name.isNotBlank(),
                     onClick = {
                         onDismissRequest()
                         if (initialSource != null)

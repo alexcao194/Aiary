@@ -4,7 +4,7 @@
     <string name="income">Income</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="amount_hint">amount</string>
-    <string name="label_hint">label</string>
+    <string name="amount_hint">Amount</string>
+    <string name="label_hint">Label</string>
     <string name="delete">Delete</string>
 </resources>
