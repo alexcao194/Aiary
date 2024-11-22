@@ -33,8 +33,9 @@ fun AppHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
+            // get data between "/" and "?"
             text = navHostController.currentDestination?.route
-                ?.substringAfterLast("/")?.toTitleCase()
+                ?.substringAfterLast("/")?.substringBefore("?")?.toTitleCase()
                 ?: "Unknown",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(8.dp)

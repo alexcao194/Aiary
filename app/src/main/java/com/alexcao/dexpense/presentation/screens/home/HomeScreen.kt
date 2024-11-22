@@ -1,10 +1,13 @@
 package com.alexcao.dexpense.presentation.screens.home
 
+import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,6 +28,9 @@ import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.dexpense.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.dexpense.ui.theme.DexpenseTheme
+import com.alexcao.dexpense.utils.extensions.encode
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 
 @Composable
@@ -49,6 +55,8 @@ fun HomeScreen(
         initialPage = selectedPage,
         pageCount = { 2 }
     )
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(selectedPage) {
         pagerState.animateScrollToPage(selectedPage)
@@ -89,8 +97,8 @@ fun HomeScreen(
                                 currentDate = date
                                 currentExpense = null
                             } else {
-
-                                navHostController.navigate(Route.SETTINGS.route)
+                                val message = "Please add at least one category and source"
+                                navHostController.navigate("${Route.SETTINGS.route}?message=${message.encode()}")
                             }
                         },
                         onPickExpense = { expenses ->

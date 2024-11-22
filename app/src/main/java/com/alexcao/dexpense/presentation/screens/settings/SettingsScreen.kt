@@ -35,7 +35,8 @@ import com.alexcao.dexpense.ui.theme.badgeOther
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = hiltViewModel(),
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    message: String? = null
 ) {
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories
@@ -145,6 +146,12 @@ fun SettingsScreen(
             error?.let {
                 snackbarHostState.showSnackbar(it)
                 settingsViewModel.clearError()
+            }
+        }
+
+        LaunchedEffect(message) {
+            message?.let {
+                snackbarHostState.showSnackbar(it)
             }
         }
     }

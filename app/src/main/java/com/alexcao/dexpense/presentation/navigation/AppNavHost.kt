@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.alexcao.dexpense.presentation.screens.home.HomeScreen
 import com.alexcao.dexpense.presentation.screens.settings.SettingsScreen
+import com.alexcao.dexpense.utils.extensions.decode
 
 @Composable
 fun AppNavHost(
@@ -24,9 +25,11 @@ fun AppNavHost(
                 navHostController = navHostController,
             )
         }
-        composable(Route.SETTINGS.route) {
+        composable("${Route.SETTINGS.route}?message={message}") {
+            val message = it.arguments?.getString("message")?.decode()
             SettingsScreen(
                 navHostController = navHostController,
+                message = message
             )
         }
     }
