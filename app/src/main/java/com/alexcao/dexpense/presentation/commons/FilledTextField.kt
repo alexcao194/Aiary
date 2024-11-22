@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -25,7 +26,8 @@ fun FilledTextField(
     hint: String,
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     BasicTextField(
         modifier = modifier
@@ -62,6 +64,6 @@ fun FilledTextField(
         },
         keyboardActions = keyboardActions,
         keyboardOptions = keyboardOptions,
-
+        visualTransformation = visualTransformation
     )
 }

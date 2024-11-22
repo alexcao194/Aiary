@@ -53,7 +53,9 @@ import com.alexcao.dexpense.data.models.SourceAmount
 import com.alexcao.dexpense.data.models.SourceInfo
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
+import rememberCurrencyVisualTransformation
 import java.math.BigDecimal
+import java.math.BigInteger
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,6 +85,7 @@ fun SourceDialog(
         val labelFocusRequester = remember { FocusRequester() }
         val amountFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
+        val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "USD")
 
         LaunchedEffect(Unit) {
             labelFocusRequester.requestFocus()
@@ -116,28 +119,32 @@ fun SourceDialog(
                         onDone = {
                             amountFocusRequester.requestFocus()
                         }
-                    )
+                    ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 FilledTextField(
                     value = source.amount.amount.toString(),
-                    onValueChange = {
-                        source = source.copy(
-                            amount = source.amount.copy(
-                                amount = BigDecimal(it)
+                    onValueChange = { value ->
+                        val trimmed = value.trimStart('0').trim { it.isDigit().not() }
+                        if (trimmed.isNotBlank()) {
+                            source = source.copy(
+                                amount = source.amount.copy(
+                                    amount = BigInteger(trimmed)
+                                )
                             )
-                        )
+                        }
                     },
                     hint = stringResource(R.string.amount_hint),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.NumberPassword
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
                             focusManager.clearFocus()
                         }
-                    )
+                    ),
+                    visualTransformation = currencyVisualTransformation
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyRow {

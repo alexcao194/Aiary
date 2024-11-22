@@ -84,9 +84,14 @@ fun HomeScreen(
                     0 -> ExpensePage(
                         expenses = expenses,
                         onAddExpense = { date ->
-                            isDialogOpen = true
-                            currentDate = date
-                            currentExpense = null
+                            if (categories.isNotEmpty() && sources.isNotEmpty()) {
+                                isDialogOpen = true
+                                currentDate = date
+                                currentExpense = null
+                            } else {
+
+                                navHostController.navigate(Route.SETTINGS.route)
+                            }
                         },
                         onPickExpense = { expenses ->
                             isDialogOpen = true

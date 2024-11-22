@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
+import java.math.BigInteger
 
 @Entity(
     foreignKeys = [
@@ -18,5 +19,5 @@ import java.math.BigDecimal
 data class SourceAmount(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val amount: BigDecimal = BigDecimal.ZERO
+    val amount: BigInteger = BigInteger.ZERO
 )

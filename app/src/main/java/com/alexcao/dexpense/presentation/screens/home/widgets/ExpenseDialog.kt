@@ -45,7 +45,9 @@ import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
 import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.FilledTextField
+import rememberCurrencyVisualTransformation
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +88,8 @@ fun ExpenseDialog(
         var isOpenCategoryDropdown by remember { mutableStateOf(false) }
         var isOpenSourceDropdown by remember { mutableStateOf(false) }
 
+        val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "USD")
+
         LaunchedEffect(Unit) {
             labelFocusRequester.requestFocus()
         }
@@ -125,12 +129,15 @@ fun ExpenseDialog(
                     FilledTextField(
                         modifier = Modifier.focusRequester(amountFocusRequester),
                         value = expense.info.amount.toString(),
-                        onValueChange = {
-                            expense = expense.copy(
-                                info = expense.info.copy(
-                                    amount = BigDecimal(it)
+                        onValueChange = { value ->
+                            val trimmed = value.trimStart('0').trim { it.isDigit().not() }
+                            if (trimmed.isNotBlank()) {
+                                expense = expense.copy(
+                                    info = expense.info.copy(
+                                        amount = BigInteger(trimmed)
+                                    )
                                 )
-                            )
+                            }
                         },
                         hint = stringResource(id = R.string.amount_hint),
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -141,7 +148,8 @@ fun ExpenseDialog(
                             onDone = {
                                 focusManager.clearFocus()
                             }
-                        )
+                        ),
+                        visualTransformation = currencyVisualTransformation
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
