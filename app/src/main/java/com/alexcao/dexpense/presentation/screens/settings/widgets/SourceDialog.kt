@@ -257,7 +257,9 @@ fun SourceDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = source.info.name.isNotBlank() && source.info.unit.isNotBlank(),
+                    enabled = source.info.name.isNotBlank()
+                            && source.info.unit.isNotBlank()
+                            && source.amount.amount != BigInteger.ZERO,
                     onClick = {
                         onDismissRequest()
                         if (initialSource != null)

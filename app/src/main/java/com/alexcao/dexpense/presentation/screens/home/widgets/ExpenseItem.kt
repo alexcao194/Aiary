@@ -30,7 +30,7 @@ import com.alexcao.dexpense.utils.extensions.toCurrency
 @Composable
 fun ExpenseItem(
     modifier: Modifier = Modifier,
-    expense: Expense
+    expense: Expense,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

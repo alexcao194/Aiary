@@ -24,18 +24,9 @@ class HomeViewModel @Inject constructor(
 
     init {
         val dateTime = Calendar.getInstance()
-        _state.update {
-            it.copy(selectedMonth = dateTime.get(Calendar.MONTH))
-        }
 
-        val month = dateTime.get(Calendar.MONTH) + 1
-        viewModelScope.launch {
-            expenseRepository.getExpenses(month).collect { expense ->
-                _state.update {
-                    it.copy(expenses = expense)
-                }
-            }
-        }
+        val month = dateTime.get(Calendar.MONTH)
+        onMonthSelected(month)
 
         viewModelScope.launch {
             expenseRepository.getCategories().collect { categories ->
@@ -55,8 +46,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onMonthSelected(month: Int) {
-        _state.update {
-            it.copy(selectedMonth = month)
+        viewModelScope.launch {
+            expenseRepository.getExpenses(month + 1).collect { expense ->
+                _state.update {
+                    it.copy(
+                        expenses = expense,
+                        selectedMonth = month
+                    )
+                }
+            }
         }
     }
 
@@ -105,6 +103,12 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun clearError() {
+        _state.update {
+            it.copy(error = null)
         }
     }
 }

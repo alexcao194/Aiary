@@ -144,6 +144,7 @@ fun SettingsScreen(
                     Icon(
                         imageVector = Icons.Rounded.Add,
                         contentDescription = "Add source button",
+                        tint = Color.White
                     )
                 }
             }

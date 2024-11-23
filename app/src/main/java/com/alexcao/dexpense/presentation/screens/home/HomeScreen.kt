@@ -1,6 +1,5 @@
 package com.alexcao.dexpense.presentation.screens.home
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -23,14 +22,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.alexcao.dexpense.data.models.Expense
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.presentation.navigation.Route
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.dexpense.presentation.screens.home.widgets.HomeHeader
 import com.alexcao.dexpense.ui.theme.DexpenseTheme
 import com.alexcao.dexpense.utils.extensions.encode
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 
 @Composable
@@ -40,6 +38,7 @@ fun HomeScreen(
     navHostController: NavHostController
 ) {
     val state = homeViewModel.state.collectAsState().value
+    val error = state.error
     val selectedPage = state.selectedPage
     val selectedMonth = state.selectedMonth
     val expenses = state.expenses
@@ -50,6 +49,7 @@ fun HomeScreen(
         mutableStateOf(LocalDate.now())
     }
     var currentExpense: Expense? = null
+    var expenseType: ExpenseType = ExpenseType.EXPENSE
 
     val pagerState = rememberPagerState(
         initialPage = selectedPage,
@@ -68,8 +68,18 @@ fun HomeScreen(
         }
     }
 
+    LaunchedEffect(error) {
+        error?.let {
+            snackbarHostState.showSnackbar(it)
+            homeViewModel.clearError()
+        }
+    }
+
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
@@ -90,12 +100,13 @@ fun HomeScreen(
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
                     0 -> ExpensePage(
-                        expenses = expenses,
+                        expenses = expenses.filter { it.info.type == ExpenseType.EXPENSE },
                         onAddExpense = { date ->
                             if (categories.isNotEmpty() && sources.isNotEmpty()) {
                                 isDialogOpen = true
                                 currentDate = date
                                 currentExpense = null
+                                expenseType = ExpenseType.EXPENSE
                             } else {
                                 val message = "Please add at least one category and source"
                                 navHostController.navigate("${Route.SETTINGS.route}?message=${message.encode()}")
@@ -107,12 +118,19 @@ fun HomeScreen(
                             currentExpense = expenses
                         }
                     )
+
                     1 -> ExpensePage(
-                        expenses = expenses,
+                        expenses = expenses.filter { it.info.type == ExpenseType.INCOME },
                         onAddExpense = { date ->
-                            isDialogOpen = true
-                            currentDate = date
-                            currentExpense = null
+                            if (categories.isNotEmpty() && sources.isNotEmpty()) {
+                                isDialogOpen = true
+                                currentDate = date
+                                currentExpense = null
+                                expenseType = ExpenseType.INCOME
+                            } else {
+                                val message = "Please add at least one category and source"
+                                navHostController.navigate("${Route.SETTINGS.route}?message=${message.encode()}")
+                            }
                         },
                         onPickExpense = { expenses ->
                             isDialogOpen = true
@@ -141,7 +159,8 @@ fun HomeScreen(
                 initialExpense = currentExpense,
                 localDate = currentDate,
                 sources = sources,
-                categories = categories
+                categories = categories,
+                expenseType = expenseType
             )
         }
     }

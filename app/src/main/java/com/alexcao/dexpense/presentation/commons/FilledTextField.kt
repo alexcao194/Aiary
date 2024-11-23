@@ -41,11 +41,10 @@ fun FilledTextField(
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    var textFieldValue by remember(value) { mutableStateOf(TextFieldValue(value)) }
+    var textFieldValue by remember{ mutableStateOf(TextFieldValue(value)) }
 
     LaunchedEffect(isFocused) {
         val endRange = if (isFocused) textFieldValue.text.length else 0
-
         textFieldValue = textFieldValue.copy(
             selection = TextRange(
                 start = 0,
@@ -68,8 +67,8 @@ fun FilledTextField(
             fontWeight = FontWeight.Bold
         ),
         onValueChange = {
-            textFieldValue = it
             onValueChange(it.text)
+            textFieldValue = it
         },
         singleLine = true,
         decorationBox = { innerTextField ->
@@ -79,7 +78,7 @@ fun FilledTextField(
                     .padding(4.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-                if (value.isEmpty()) Text(
+                if (textFieldValue.text.isEmpty()) Text(
                     text = hint,
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(

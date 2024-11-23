@@ -29,7 +29,7 @@ fun ExpensePage(
     modifier: Modifier = Modifier,
     expenses: List<Expense>,
     onAddExpense: (LocalDate) -> Unit = {},
-    onPickExpense: (Expense) -> Unit = {}
+    onPickExpense: (Expense) -> Unit = {},
 ) {
     val currentDate = LocalDate.now()
     val currentDay = currentDate.dayOfMonth

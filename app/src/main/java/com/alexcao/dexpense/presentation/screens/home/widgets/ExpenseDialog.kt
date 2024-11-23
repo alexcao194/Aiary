@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -44,6 +45,7 @@ import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
 import com.alexcao.dexpense.data.models.ExpenseInfo
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.BadgeChip
 import com.alexcao.dexpense.presentation.commons.FilledTextField
@@ -60,6 +62,7 @@ fun ExpenseDialog(
     initialExpense: Expense? = null,
     sources: List<Source>,
     categories: List<Category>,
+    expenseType: ExpenseType,
     onDismissRequest: () -> Unit,
     onSave: (Expense) -> Unit,
     onUpdate: (Expense) -> Unit,
@@ -78,6 +81,7 @@ fun ExpenseDialog(
                         expenseSourceId = sources.first().info.id,
                         categoryId = categories.first().id,
                         date = localDate,
+                        type = expenseType
                     )
                 )
             )
@@ -134,11 +138,16 @@ fun ExpenseDialog(
                         modifier = Modifier.focusRequester(amountFocusRequester),
                         value = expense.info.amount.toString(),
                         onValueChange = { value ->
-                            val trimmed = value.trimStart('0').trim { it.isDigit().not() }
-                            if (trimmed.isNotBlank()) {
+                            val amount = value.trimStart('0').trim { it.isDigit().not() }
+                            if (amount.isNotBlank()) {
+                                val signedAmount = if (expenseType == ExpenseType.EXPENSE) {
+                                    "-$amount"
+                                } else {
+                                    amount
+                                }
                                 expense = expense.copy(
                                     info = expense.info.copy(
-                                        amount = BigInteger(trimmed)
+                                        amount = BigInteger(signedAmount)
                                     )
                                 )
                             }
@@ -278,7 +287,8 @@ fun ExpenseDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = expense.info.label.isNotBlank(),
+                    enabled = expense.info.label.isNotBlank()
+                            && expense.info.amount != BigInteger.ZERO,
                     onClick = {
                         onDismissRequest()
                         if (initialExpense != null) {
