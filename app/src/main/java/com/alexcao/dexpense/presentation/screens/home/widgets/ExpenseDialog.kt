@@ -81,7 +81,6 @@ fun ExpenseDialog(
                         expenseSourceId = sources.first().info.id,
                         categoryId = categories.first().id,
                         date = localDate,
-                        type = expenseType
                     )
                 )
             )

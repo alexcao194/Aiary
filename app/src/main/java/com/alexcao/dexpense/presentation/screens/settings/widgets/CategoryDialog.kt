@@ -26,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,8 +50,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Category
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.ui.theme.badgeColors
+import com.alexcao.dexpense.ui.theme.expenseColor
+import com.alexcao.dexpense.ui.theme.expenseIndicatorColor
+import com.alexcao.dexpense.ui.theme.inComeColor
+import com.alexcao.dexpense.ui.theme.inComeIndicatorColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,12 +66,14 @@ fun CategoryDialog(
     onSave: (Category) -> Unit,
     onUpdate: (Category) -> Unit,
     onDelete: (Category) -> Unit,
-    initialCategory: Category? = null
+    initialCategory: Category? = null,
+    expenseType: ExpenseType
 ) {
     var category by remember {
         mutableStateOf(
             initialCategory ?: Category(
-                tint = badgeColors.first()
+                tint = badgeColors.first(),
+                type = expenseType
             )
         )
     }

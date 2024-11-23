@@ -103,9 +103,12 @@ fun HomeScreen(
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
                     0 -> ExpensePage(
-                        expenses = expenses.filter { it.info.type == ExpenseType.EXPENSE },
+                        expenses = expenses.filter { it.category.type == ExpenseType.EXPENSE },
                         onAddExpense = { date ->
-                            if (categories.isNotEmpty() && sources.isNotEmpty()) {
+                            if (
+                                categories.any { it.type == ExpenseType.EXPENSE }
+                                && sources.isNotEmpty()
+                            ) {
                                 isDialogOpen = true
                                 currentDate = date
                                 currentExpense = null
@@ -125,9 +128,12 @@ fun HomeScreen(
                     )
 
                     1 -> ExpensePage(
-                        expenses = expenses.filter { it.info.type == ExpenseType.INCOME },
+                        expenses = expenses.filter { it.category.type == ExpenseType.INCOME },
                         onAddExpense = { date ->
-                            if (categories.isNotEmpty() && sources.isNotEmpty()) {
+                            if (
+                                categories.any { it.type == ExpenseType.INCOME }
+                                && sources.isNotEmpty()
+                                ) {
                                 isDialogOpen = true
                                 currentDate = date
                                 currentExpense = null
@@ -166,7 +172,9 @@ fun HomeScreen(
                 initialExpense = currentExpense,
                 localDate = currentDate,
                 sources = sources,
-                categories = categories,
+                categories = categories.filter {
+                    it.type == (currentExpense?.category?.type ?: expenseType)
+               },
                 expenseType = expenseType
             )
         }

@@ -37,10 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Category
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.AppHeader
 import com.alexcao.dexpense.presentation.commons.BadgeChip
@@ -59,6 +62,9 @@ fun SettingsScreen(
 ) {
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories
+    val expenseCategories = categories.filter { it.type == ExpenseType.EXPENSE }
+    val incomeCategories = categories.filter { it.type == ExpenseType.INCOME }
+    var expenseType = ExpenseType.EXPENSE
     val sources = state.sources
     val error = state.error
 
@@ -84,12 +90,12 @@ fun SettingsScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Expense Category",
+                    text = stringResource(R.string.expense_category),
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
                 FlowRow {
-                    for (category in categories) {
+                    for (category in expenseCategories) {
                         BadgeChip(
                             modifier = Modifier.padding(4.dp),
                             label = category.name,
@@ -107,12 +113,42 @@ fun SettingsScreen(
                         onClick = {
                             isCategoryDialogOpen = true
                             currentCategory = null
+                            expenseType = ExpenseType.EXPENSE
                         }
                     )
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(
-                    text = "Expense Source",
+                    text = stringResource(R.string.income_category),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                FlowRow {
+                    for (category in incomeCategories) {
+                        BadgeChip(
+                            modifier = Modifier.padding(4.dp),
+                            label = category.name,
+                            color = category.tint,
+                            onClick = {
+                                isCategoryDialogOpen = true
+                                currentCategory = category
+                            }
+                        )
+                    }
+                    BadgeChip(
+                        modifier = Modifier.padding(4.dp),
+                        label = "+",
+                        color = Color.Gray.copy(alpha = 0.5f),
+                        onClick = {
+                            isCategoryDialogOpen = true
+                            currentCategory = null
+                            expenseType = ExpenseType.INCOME
+                        }
+                    )
+                }
+                Spacer(modifier = Modifier.padding(16.dp))
+                Text(
+                    text = stringResource(R.string.expense_source),
                     style = MaterialTheme.typography.titleMedium
                 )
                 LazyColumn {
@@ -158,7 +194,8 @@ fun SettingsScreen(
                 onDismissRequest = { isCategoryDialogOpen = false },
                 onSave = { category -> settingsViewModel.saveCategory(category) },
                 onUpdate = { category -> settingsViewModel.updateCategory(category) },
-                onDelete = { category -> settingsViewModel.deleteCategory(category) }
+                onDelete = { category -> settingsViewModel.deleteCategory(category) },
+                expenseType = expenseType
             )
         }
 

@@ -11,4 +11,5 @@ data class Category(
     val id: Int = 0,
     val name: String = "",
     val tint: Color = Color.Unspecified,
+    val type: ExpenseType = ExpenseType.EXPENSE,
 )
