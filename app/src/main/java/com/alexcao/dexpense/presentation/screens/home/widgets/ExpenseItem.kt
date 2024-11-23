@@ -59,7 +59,7 @@ fun ExpenseItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = expense.info.amount.toString().toCurrency("VND"),
+                    text = expense.info.amount.toString().toCurrency(expense.sourceInfo.unit),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Bold

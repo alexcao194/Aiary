@@ -48,6 +48,7 @@ import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.BadgeChip
 import com.alexcao.dexpense.presentation.commons.FilledTextField
 import com.alexcao.dexpense.utils.extensions.toCurrency
+import rememberCurrencyVisualTransformation
 import java.math.BigInteger
 import java.time.LocalDate
 
@@ -82,6 +83,10 @@ fun ExpenseDialog(
             )
         }
 
+        val currencyVisualTransformation = rememberCurrencyVisualTransformation(
+            currency = expense.sourceInfo.unit
+        )
+
         val focusManager = LocalFocusManager.current
         val labelFocusRequester = remember { FocusRequester() }
         val amountFocusRequester = remember { FocusRequester() }
@@ -111,7 +116,7 @@ fun ExpenseDialog(
                         onValueChange = {
                             expense = expense.copy(
                                 info = expense.info.copy(
-                                    label = it
+                                    label = it.trim()
                                 )
                             )
                         },
@@ -148,6 +153,7 @@ fun ExpenseDialog(
                                 focusManager.clearFocus()
                             }
                         ),
+                        visualTransformation = currencyVisualTransformation
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))

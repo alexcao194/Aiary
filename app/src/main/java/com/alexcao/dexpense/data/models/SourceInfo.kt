@@ -11,4 +11,5 @@ data class SourceInfo(
     val id: Int = 0,
     val name: String = "",
     val tint: Color = Color.Unspecified,
+    val unit: String = "USD"
 )

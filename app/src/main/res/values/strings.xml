@@ -7,4 +7,5 @@
     <string name="amount_hint">Amount</string>
     <string name="label_hint">Label</string>
     <string name="delete">Delete</string>
+    <string name="unit_hint">USD</string>
 </resources>

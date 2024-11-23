@@ -77,7 +77,9 @@ fun SourceDialog(
         )
     }
 
-    val currencyVisualTransformation = rememberCurrencyVisualTransformation(currency = "VND")
+    val currencyVisualTransformation = rememberCurrencyVisualTransformation(
+        currency = source.info.unit
+    )
 
     BasicAlertDialog(
         modifier = modifier.fillMaxWidth(),
@@ -85,6 +87,7 @@ fun SourceDialog(
     ) {
         val labelFocusRequester = remember { FocusRequester() }
         val amountFocusRequester = remember { FocusRequester() }
+        val unitFocusRequester = remember { FocusRequester() }
         val focusManager = LocalFocusManager.current
 
         LaunchedEffect(Unit) {
@@ -106,7 +109,7 @@ fun SourceDialog(
                     onValueChange = {
                         source = source.copy(
                             info = source.info.copy(
-                                name = it
+                                name = it.trim()
                             )
                         )
                     },
@@ -116,39 +119,67 @@ fun SourceDialog(
                         capitalization = KeyboardCapitalization.Sentences
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
+                        onNext = {
                             amountFocusRequester.requestFocus()
                         }
                     ),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FilledTextField(
-                    value = source.amount.amount.toString(),
-                    onValueChange = { value ->
-                        val trimmed = value.trimStart('0').trim { it.isDigit().not() }
-                        val amount = if (trimmed.isNotBlank()) {
-                            BigInteger(trimmed)
-                        } else {
-                            BigInteger.ZERO
-                        }
-                        source = source.copy(
-                            amount = source.amount.copy(
-                                amount = amount
+                Row {
+                    FilledTextField(
+                        modifier = Modifier
+                            .focusRequester(amountFocusRequester)
+                            .weight(3f),
+                        value = source.amount.amount.toString(),
+                        onValueChange = { value ->
+                            val trimmed = value.trimStart('0').trim { it.isDigit().not() }
+                            val amount = if (trimmed.isNotBlank()) {
+                                BigInteger(trimmed)
+                            } else {
+                                BigInteger.ZERO
+                            }
+                            source = source.copy(
+                                amount = source.amount.copy(
+                                    amount = amount
+                                )
                             )
-                        )
-                    },
-                    hint = stringResource(R.string.amount_hint),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.NumberPassword
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                        }
-                    ),
-                    visualTransformation = currencyVisualTransformation
-                )
+                        },
+                        hint = stringResource(R.string.amount_hint),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.NumberPassword
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                unitFocusRequester.requestFocus()
+                            }
+                        ),
+                        visualTransformation = currencyVisualTransformation
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    FilledTextField(
+                        modifier = Modifier
+                            .focusRequester(unitFocusRequester)
+                            .weight(1f),
+                        value = source.info.unit,
+                        onValueChange = { value ->
+                            source = source.copy(
+                                info = source.info.copy(
+                                    unit = value.trim()
+                                )
+                            )
+                        },
+                        hint = stringResource(R.string.unit_hint),
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done,
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.clearFocus()
+                            }
+                        ),
+                    )
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyRow {
                     items(badgeColors) { badgeColor ->
@@ -226,7 +257,7 @@ fun SourceDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = source.info.name.isNotBlank(),
+                    enabled = source.info.name.isNotBlank() && source.info.unit.isNotBlank(),
                     onClick = {
                         onDismissRequest()
                         if (initialSource != null)

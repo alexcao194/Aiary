@@ -64,7 +64,7 @@ fun SourceItem(
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = "VND",
+            text = source.info.unit,
             style = MaterialTheme.typography.titleSmall.copy(
                 color = Color.White,
                 fontWeight = FontWeight.Bold

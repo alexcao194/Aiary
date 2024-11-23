@@ -5,6 +5,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.core.text.isDigitsOnly
+import com.alexcao.dexpense.utils.CurrencyOffsetMapping
 import com.alexcao.dexpense.utils.extensions.toCurrency
 
 private class CurrencyVisualTransformation(
