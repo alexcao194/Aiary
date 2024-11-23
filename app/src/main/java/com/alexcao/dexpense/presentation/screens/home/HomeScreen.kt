@@ -17,10 +17,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.presentation.navigation.Route
@@ -50,6 +52,7 @@ fun HomeScreen(
     }
     var currentExpense: Expense? = null
     var expenseType: ExpenseType = ExpenseType.EXPENSE
+    val message = stringResource(R.string.please_add_at_least_one_category_and_source)
 
     val pagerState = rememberPagerState(
         initialPage = selectedPage,
@@ -108,15 +111,17 @@ fun HomeScreen(
                                 currentExpense = null
                                 expenseType = ExpenseType.EXPENSE
                             } else {
-                                val message = "Please add at least one category and source"
-                                navHostController.navigate("${Route.SETTINGS.route}?message=${message.encode()}")
+                                navHostController.navigate(
+                                    "${Route.SETTINGS.route}?message=${message.encode()}"
+                                )
                             }
                         },
                         onPickExpense = { expenses ->
                             isDialogOpen = true
                             currentDate = expenses.info.date
                             currentExpense = expenses
-                        }
+                        },
+                        expenseType = ExpenseType.EXPENSE
                     )
 
                     1 -> ExpensePage(
@@ -128,15 +133,17 @@ fun HomeScreen(
                                 currentExpense = null
                                 expenseType = ExpenseType.INCOME
                             } else {
-                                val message = "Please add at least one category and source"
-                                navHostController.navigate("${Route.SETTINGS.route}?message=${message.encode()}")
+                                navHostController.navigate(
+                                    "${Route.SETTINGS.route}?message=${message.encode()}"
+                                )
                             }
                         },
                         onPickExpense = { expenses ->
                             isDialogOpen = true
                             currentDate = expenses.info.date
                             currentExpense = expenses
-                        }
+                        },
+                        expenseType = ExpenseType.INCOME
                     )
                 }
             }
@@ -163,16 +170,5 @@ fun HomeScreen(
                 expenseType = expenseType
             )
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview() {
-    val navHostController = rememberNavController()
-    DexpenseTheme {
-        HomeScreen(
-            navHostController = navHostController
-        )
     }
 }

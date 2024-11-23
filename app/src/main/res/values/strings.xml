@@ -8,4 +8,7 @@
     <string name="label_hint">Label</string>
     <string name="delete">Delete</string>
     <string name="unit_hint">USD</string>
+    <string name="please_add_at_least_one_category_and_source">Please add at least one category and source</string>
+    <string name="total">"Total: "</string>
+    <string name="no_available_records">No available records</string>
 </resources>
