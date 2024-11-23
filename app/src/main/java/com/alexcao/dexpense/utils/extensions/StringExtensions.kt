@@ -1,5 +1,6 @@
 package com.alexcao.dexpense.utils.extensions
 
+import java.math.BigDecimal
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -20,16 +21,17 @@ fun String.decode(): String {
     return URLDecoder.decode(this, StandardCharsets.UTF_8.toString())
 }
 
-fun String.toCurrency(currencySymbol: String): String {
-    return try {
+fun String.toCurrency(currencySymbol: String? = null): String {
+    val formatedText = try {
         val formatter = DecimalFormat("#,###")
-        val formattedAmount = formatter.format(this.toDouble())
-        "$formattedAmount $currencySymbol"
+        val formattedAmount = formatter.format(BigDecimal(this))
+        formattedAmount
     } catch (e: NumberFormatException) {
-        "0 $currencySymbol"
+        "0"
     }
+    return if (currencySymbol != null) "$formatedText $currencySymbol" else formatedText
 }
 
-fun String.toAmount(): Double {
-    return this.replace(",", "").toDouble()
+fun String.toAmount(): BigDecimal {
+    return this.replace(",", "").toBigDecimal()
 }

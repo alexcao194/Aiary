@@ -1,9 +1,12 @@
+import android.util.Log
 import androidx.compose.ui.text.input.OffsetMapping
 
 class CurrencyOffsetMapping(originalText: String, formattedText: String) : OffsetMapping {
     private val originalLength: Int = originalText.length
     private val indexes = findDigitIndexes(originalText, formattedText)
     private fun findDigitIndexes(firstString: String, secondString: String): List<Int> {
+        Log.d("TAG", "offset: $firstString")
+        Log.d("TAG", "originalLength: $secondString")
         val digitIndexes = mutableListOf<Int>()
         var currentIndex = 0
         for (digit in firstString) {
