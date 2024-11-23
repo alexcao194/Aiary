@@ -57,3 +57,8 @@ val badgeColors: List<Color> = listOf(
     badgeSapphire,
     badgeOther
 )
+
+val inComeColor = Color(0xFFACDFCA)
+val inComeIndicatorColor = Color(0xFF4D8B7D)
+val expenseColor = Color(0xFFE49999)
+val expenseIndicatorColor = Color(0xFFA23A3A)

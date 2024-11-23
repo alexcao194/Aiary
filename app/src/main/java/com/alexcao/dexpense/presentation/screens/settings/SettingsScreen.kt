@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -116,30 +119,29 @@ fun SettingsScreen(
                     items(sources) { source ->
                         SourceItem(
                             modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .clickable {
-                                    isSourceDialogOpen = true
-                                    currentSource = source
-                                },
-                            source = source
+                                .padding(vertical = 8.dp),
+                            source = source,
+                            onClick = {
+                                isSourceDialogOpen = true
+                                currentSource = source
+                            }
                         )
                     }
                 }
-                Box(
+                Button(
                     modifier = modifier
                         .padding(top = 8.dp)
-                        .fillMaxWidth()
-                        .background(
-                            color = Color.Gray.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .padding(horizontal = 16.dp)
                         .height(60.dp)
-                        .clickable {
-                            isSourceDialogOpen = true
-                            currentSource = null
-                        },
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Gray.copy(alpha = 0.5f),
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    onClick = {
+                        isSourceDialogOpen = true
+                        currentSource = null
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Add,

@@ -1,6 +1,7 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
-import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,13 +23,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
+import com.alexcao.dexpense.ui.theme.expenseColor
+import com.alexcao.dexpense.ui.theme.expenseIndicatorColor
+import com.alexcao.dexpense.ui.theme.inComeColor
+import com.alexcao.dexpense.ui.theme.inComeIndicatorColor
 import java.time.Month
 import java.util.Locale
 import java.time.format.TextStyle
@@ -49,6 +56,13 @@ fun HomeHeader(
             lazyRowState.scrollToItem(selectedMonth)
         }
     }
+
+    val indicatorColor by animateColorAsState(
+        targetValue = if (selectedPage == 0) expenseIndicatorColor else inComeIndicatorColor,
+        animationSpec = tween(durationMillis = 300),
+        label = "indicatorColor"
+    )
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -105,33 +119,49 @@ fun HomeHeader(
         }
         TabRow(
             selectedTabIndex = selectedPage,
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.primary,
             indicator = { tabPositions ->
                 SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[selectedPage]),
                     height = 2.dp,
-                    color = MaterialTheme.colorScheme.primary
+                    color = indicatorColor
                 )
             },
         ) {
-            val tabIds = listOf(
-                R.string.expenses,
-                R.string.income,
-            )
-            tabIds.forEachIndexed { index, tabId ->
-                Tab(
-                    selected = index == selectedPage,
-                    onClick = {
-                        onPageSelected(index)
-                    },
-                ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = stringResource(id = tabId),
-                        style = MaterialTheme.typography.titleMedium,
+            Tab(
+                modifier = Modifier.background(
+                  color = expenseColor
+                ),
+                selected = selectedPage == 0,
+                onClick = {
+                    onPageSelected(0)
+                },
+                selectedContentColor = Color.White,
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = stringResource(id = R.string.expenses),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold
                     )
-                }
+                )
+            }
+            Tab(
+                modifier = Modifier.background(
+                    color = inComeColor
+                ),
+                selected = selectedPage == 1,
+                onClick = {
+                    onPageSelected(1)
+                },
+                selectedContentColor = Color.White,
+            ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = stringResource(id = R.string.income),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
             }
         }
     }

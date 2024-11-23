@@ -2,6 +2,7 @@ package com.alexcao.dexpense.presentation.screens.settings.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,24 +24,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.data.models.Source
+import com.alexcao.dexpense.ui.theme.badgeOther
 import com.alexcao.dexpense.utils.extensions.toCurrency
 
 @Composable
 fun SourceItem(
     modifier: Modifier = Modifier,
-    source: Source
+    source: Source,
+    onClick: (Source) -> Unit = {},
 ) {
-    Row(
+    Button(
         modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = source.info.tint,
-                shape = RoundedCornerShape(16.dp)
-            )
-            .padding(horizontal = 16.dp)
-            .height(60.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+            .height(60.dp)
+            .fillMaxWidth(),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = source.info.tint,
+        ),
+        shape = RoundedCornerShape(16.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        onClick = { onClick(source) }
     ) {
         Text(
             modifier = Modifier.weight(1f),
