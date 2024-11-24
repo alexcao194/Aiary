@@ -1,14 +1,9 @@
 package com.alexcao.dexpense.presentation.screens.settings
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -51,7 +45,6 @@ import com.alexcao.dexpense.presentation.commons.BadgeChip
 import com.alexcao.dexpense.presentation.screens.settings.widgets.CategoryDialog
 import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceDialog
 import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceItem
-import com.alexcao.dexpense.ui.theme.badgeOther
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -59,7 +52,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = hiltViewModel(),
     navHostController: NavHostController,
-    message: String? = null
+    message: String? = null,
 ) {
     val state = settingsViewModel.state.collectAsState().value
     val categories = state.categories

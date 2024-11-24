@@ -2,7 +2,6 @@ package com.alexcao.dexpense.presentation.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
@@ -19,10 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.ExpenseType
@@ -30,7 +27,6 @@ import com.alexcao.dexpense.presentation.navigation.Route
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.dexpense.presentation.screens.home.widgets.HomeHeader
-import com.alexcao.dexpense.ui.theme.DexpenseTheme
 import com.alexcao.dexpense.utils.extensions.encode
 import java.time.LocalDate
 
@@ -68,7 +64,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            homeViewModel.onPageSelected(page)
+            homeViewModel.selectPage(page)
         }
     }
 
@@ -91,11 +87,11 @@ fun HomeScreen(
             HomeHeader(
                 selectedMonth = selectedMonth,
                 onChangeMonth = { month ->
-                    homeViewModel.onMonthSelected(month)
+                    homeViewModel.selectMonth(month)
                 },
                 selectedPage = selectedPage,
                 onPageSelected = { page ->
-                    homeViewModel.onPageSelected(page)
+                    homeViewModel.selectPage(page)
                 },
                 onOpenSettings = {
                     navHostController.navigate(Route.SETTINGS.route)
@@ -125,7 +121,11 @@ fun HomeScreen(
                             currentDate = expenses.info.date
                             currentExpense = expenses
                         },
-                        expenseType = ExpenseType.EXPENSE
+                        expenseType = ExpenseType.EXPENSE,
+                        currentMonth = selectedMonth,
+                        onOpenStatistics = {
+                            navHostController.navigate(Route.STATISTICS.route)
+                        }
                     )
 
                     1 -> ExpensePage(
@@ -134,7 +134,7 @@ fun HomeScreen(
                             if (
                                 categories.any { it.type == ExpenseType.INCOME }
                                 && sources.isNotEmpty()
-                                ) {
+                            ) {
                                 isDialogOpen = true
                                 currentDate = date
                                 currentExpense = null
@@ -150,7 +150,11 @@ fun HomeScreen(
                             currentDate = expenses.info.date
                             currentExpense = expenses
                         },
-                        expenseType = ExpenseType.INCOME
+                        expenseType = ExpenseType.INCOME,
+                        currentMonth = selectedMonth,
+                        onOpenStatistics = {
+                            navHostController.navigate(Route.STATISTICS.route)
+                        }
                     )
                 }
             }
@@ -162,20 +166,20 @@ fun HomeScreen(
                     isDialogOpen = false
                 },
                 onSave = { expense ->
-                    homeViewModel.onSaveExpense(expense)
+                    homeViewModel.saveExpense(expense)
                 },
                 onDelete = { expense ->
-                    homeViewModel.onDeleteExpense(expense)
+                    homeViewModel.deleteExpense(expense)
                 },
                 onUpdate = { expense ->
-                    homeViewModel.onUpdateExpense(expense)
+                    homeViewModel.updateExpense(expense)
                 },
                 initialExpense = currentExpense,
                 localDate = currentDate,
                 sources = sources,
                 categories = categories.filter {
                     it.type == (currentExpense?.category?.type ?: expenseType)
-               },
+                },
                 expenseType = expenseType
             )
         }

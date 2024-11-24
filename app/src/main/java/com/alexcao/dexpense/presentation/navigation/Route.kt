@@ -4,5 +4,6 @@ enum class Route (
     val route: String
 ) {
     HOME(route = "home"),
-    SETTINGS(route = "settings")
+    SETTINGS(route = "settings"),
+    STATISTICS(route = "statistics")
 }

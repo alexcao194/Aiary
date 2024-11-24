@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
         val dateTime = Calendar.getInstance()
 
         val month = dateTime.get(Calendar.MONTH)
-        onMonthSelected(month)
+        selectMonth(month)
 
         viewModelScope.launch {
             expenseRepository.getCategories().collect { categories ->
@@ -45,7 +45,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onMonthSelected(month: Int) {
+    fun selectMonth(month: Int) {
         viewModelScope.launch {
             expenseRepository.getExpenses(month + 1).collect { expense ->
                 _state.update {
@@ -58,13 +58,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onPageSelected(page: Int) {
+    fun selectPage(page: Int) {
         _state.update {
             it.copy(selectedPage = page)
         }
     }
 
-    fun onSaveExpense(expense: Expense) {
+    fun saveExpense(expense: Expense) {
         viewModelScope.launch {
             expenseRepository.addExpense(expense = expense).collect { resource ->
                 when (resource) {
@@ -78,7 +78,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteExpense(expense: Expense) {
+    fun deleteExpense(expense: Expense) {
         viewModelScope.launch {
             expenseRepository.deleteExpense(expense = expense).collect { resource ->
                 when (resource) {
@@ -92,7 +92,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onUpdateExpense(expense: Expense) {
+    fun updateExpense(expense: Expense) {
         viewModelScope.launch {
             expenseRepository.updateExpense(expense = expense).collect { resource ->
                 when (resource) {

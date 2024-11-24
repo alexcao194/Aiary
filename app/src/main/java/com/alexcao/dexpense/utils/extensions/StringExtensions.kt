@@ -25,7 +25,7 @@ fun String.toCurrency(currencySymbol: String? = null): String {
     val formatedText = try {
         val formatter = DecimalFormat("#,###")
         val formattedAmount = formatter.format(BigDecimal(this))
-        formattedAmount
+        if (formattedAmount.startsWith('-')) formattedAmount else "+$formattedAmount"
     } catch (e: NumberFormatException) {
         "0"
     }

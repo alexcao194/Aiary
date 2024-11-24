@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.alexcao.dexpense.presentation.screens.home.HomeScreen
 import com.alexcao.dexpense.presentation.screens.settings.SettingsScreen
+import com.alexcao.dexpense.presentation.screens.statistics.StatisticsScreen
 import com.alexcao.dexpense.utils.extensions.decode
 
 @Composable
@@ -29,7 +30,12 @@ fun AppNavHost(
             val message = it.arguments?.getString("message")?.decode()
             SettingsScreen(
                 navHostController = navHostController,
-                message = message
+                message = message,
+            )
+        }
+        composable(Route.STATISTICS.route) {
+            StatisticsScreen(
+                navHostController = navHostController,
             )
         }
     }
