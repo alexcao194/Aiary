@@ -1,6 +1,7 @@
 package com.alexcao.dexpense.presentation.screens.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -85,7 +86,7 @@ fun HomeScreen(
         },
     ) { padding ->
         Column(
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.consumeWindowInsets(padding)
         ) {
             HomeHeader(
                 selectedMonth = selectedMonth,

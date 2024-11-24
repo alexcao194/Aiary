@@ -51,13 +51,6 @@ private val lightScheme = lightColorScheme(
 fun DexpenseTheme(
     content: @Composable() () -> Unit
 ) {
-
-    val view = LocalView.current
-    SideEffect {
-        val window = (view.context as Activity).window
-        window.statusBarColor = lightScheme.primaryContainer.toArgb()
-    }
-
     MaterialTheme(
         colorScheme = lightScheme,
         typography = AppTypography,
