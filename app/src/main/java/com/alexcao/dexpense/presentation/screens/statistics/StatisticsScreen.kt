@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.alexcao.dexpense.presentation.commons.AppHeader
+import com.alexcao.dexpense.presentation.screens.SharedViewModel
 
 @Composable
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: StatisticsViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navHostController: NavHostController,
 ) {
     val state = settingsViewModel.state.collectAsState().value

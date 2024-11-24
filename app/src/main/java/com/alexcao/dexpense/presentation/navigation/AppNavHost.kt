@@ -2,9 +2,11 @@ package com.alexcao.dexpense.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.alexcao.dexpense.presentation.screens.SharedViewModel
 import com.alexcao.dexpense.presentation.screens.home.HomeScreen
 import com.alexcao.dexpense.presentation.screens.settings.SettingsScreen
 import com.alexcao.dexpense.presentation.screens.statistics.StatisticsScreen
@@ -24,6 +26,7 @@ fun AppNavHost(
         composable(Route.HOME.route) {
             HomeScreen(
                 navHostController = navHostController,
+                sharedViewModel = hiltViewModel(),
             )
         }
         composable("${Route.SETTINGS.route}?message={message}") {
@@ -31,11 +34,13 @@ fun AppNavHost(
             SettingsScreen(
                 navHostController = navHostController,
                 message = message,
+                sharedViewModel = hiltViewModel(),
             )
         }
         composable(Route.STATISTICS.route) {
             StatisticsScreen(
                 navHostController = navHostController,
+                sharedViewModel = hiltViewModel(),
             )
         }
     }

@@ -42,6 +42,7 @@ import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.data.models.Source
 import com.alexcao.dexpense.presentation.commons.AppHeader
 import com.alexcao.dexpense.presentation.commons.BadgeChip
+import com.alexcao.dexpense.presentation.screens.SharedViewModel
 import com.alexcao.dexpense.presentation.screens.settings.widgets.CategoryDialog
 import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceDialog
 import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceItem
@@ -51,16 +52,18 @@ import com.alexcao.dexpense.presentation.screens.settings.widgets.SourceItem
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navHostController: NavHostController,
     message: String? = null,
 ) {
     val state = settingsViewModel.state.collectAsState().value
-    val categories = state.categories
+    val sharedState = sharedViewModel.state.collectAsState().value
+    val categories = sharedState.categories
     val expenseCategories = categories.filter { it.type == ExpenseType.EXPENSE }
     val incomeCategories = categories.filter { it.type == ExpenseType.INCOME }
     var expenseType = ExpenseType.EXPENSE
-    val sources = state.sources
-    val error = state.error
+    val sources = sharedState.sources
+    val error = state.error ?: sharedState.error
 
     val snackbarHostState = remember { SnackbarHostState() }
     var isCategoryDialogOpen by rememberSaveable { mutableStateOf(false) }

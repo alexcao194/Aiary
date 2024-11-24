@@ -24,6 +24,7 @@ import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.presentation.navigation.Route
+import com.alexcao.dexpense.presentation.screens.SharedViewModel
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpenseDialog
 import com.alexcao.dexpense.presentation.screens.home.widgets.ExpensePage
 import com.alexcao.dexpense.presentation.screens.home.widgets.HomeHeader
@@ -34,15 +35,17 @@ import java.time.LocalDate
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel,
     navHostController: NavHostController
 ) {
     val state = homeViewModel.state.collectAsState().value
-    val error = state.error
+    val sharedState = sharedViewModel.state.collectAsState().value
+    val error = state.error ?: sharedState.error
     val selectedPage = state.selectedPage
-    val selectedMonth = state.selectedMonth
+    val currentMonth = sharedState.currentMonth
     val expenses = state.expenses
-    val sources = state.sources
-    val categories = state.categories
+    val sources = sharedState.sources
+    val categories = sharedState.categories
     var isDialogOpen by rememberSaveable { mutableStateOf(false) }
     var currentDate by remember {
         mutableStateOf(LocalDate.now())
@@ -68,6 +71,10 @@ fun HomeScreen(
         }
     }
 
+    LaunchedEffect(currentMonth) {
+        homeViewModel.selectMonth(currentMonth)
+    }
+
     LaunchedEffect(error) {
         error?.let {
             snackbarHostState.showSnackbar(it)
@@ -85,9 +92,9 @@ fun HomeScreen(
             modifier = Modifier.consumeWindowInsets(padding)
         ) {
             HomeHeader(
-                selectedMonth = selectedMonth,
+                selectedMonth = currentMonth,
                 onChangeMonth = { month ->
-                    homeViewModel.selectMonth(month)
+                    sharedViewModel.selectMonth(month)
                 },
                 selectedPage = selectedPage,
                 onPageSelected = { page ->
@@ -122,7 +129,7 @@ fun HomeScreen(
                             currentExpense = expenses
                         },
                         expenseType = ExpenseType.EXPENSE,
-                        currentMonth = selectedMonth,
+                        currentMonth = currentMonth,
                         onOpenStatistics = {
                             navHostController.navigate(Route.STATISTICS.route)
                         }
@@ -151,7 +158,7 @@ fun HomeScreen(
                             currentExpense = expenses
                         },
                         expenseType = ExpenseType.INCOME,
-                        currentMonth = selectedMonth,
+                        currentMonth = currentMonth,
                         onOpenStatistics = {
                             navHostController.navigate(Route.STATISTICS.route)
                         }

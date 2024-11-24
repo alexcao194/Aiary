@@ -22,24 +22,6 @@ class SettingsViewModel @Inject constructor(
     private val _state: MutableStateFlow<SettingsState> = MutableStateFlow(SettingsState())
     val state: StateFlow<SettingsState> = _state
 
-    init {
-        viewModelScope.launch {
-            expenseRepository.getCategories().collect { categories ->
-                _state.update {
-                    it.copy(categories = categories)
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            expenseRepository.getSources().collect { sources ->
-                _state.update {
-                    it.copy(sources = sources)
-                }
-            }
-        }
-    }
-
     fun saveCategory(category: Category) {
         viewModelScope.launch {
             expenseRepository.addCategory(category).collect { resource ->

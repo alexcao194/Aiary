@@ -9,8 +9,5 @@ data class HomeState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val selectedPage: Int = 0,
-    val selectedMonth: Int = 0,
     val expenses: List<Expense> = emptyList(),
-    val categories: List<Category> = emptyList(),
-    val sources: List<Source> = emptyList(),
 )

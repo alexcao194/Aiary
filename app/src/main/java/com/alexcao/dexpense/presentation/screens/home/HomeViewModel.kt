@@ -22,36 +22,12 @@ class HomeViewModel @Inject constructor(
     private var _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state
 
-    init {
-        val dateTime = Calendar.getInstance()
-
-        val month = dateTime.get(Calendar.MONTH)
-        selectMonth(month)
-
-        viewModelScope.launch {
-            expenseRepository.getCategories().collect { categories ->
-                _state.update {
-                    it.copy(categories = categories)
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            expenseRepository.getSources().collect { sources ->
-                _state.update {
-                    it.copy(sources = sources)
-                }
-            }
-        }
-    }
-
     fun selectMonth(month: Int) {
         viewModelScope.launch {
             expenseRepository.getExpenses(month + 1).collect { expense ->
                 _state.update {
                     it.copy(
                         expenses = expense,
-                        selectedMonth = month
                     )
                 }
             }
