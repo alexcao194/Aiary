@@ -110,7 +110,7 @@ fun ExpensePage(
                 }
             }
         }
-        Column(
+        Row(
             modifier = Modifier
                 .clickable {
                     onOpenStatistics()
@@ -121,49 +121,37 @@ fun ExpensePage(
                 )
                 .padding(bottom = systemBarHeight)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            Text(
+                text = stringResource(R.string.total),
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.onPrimary // Text color
+            )
+            if (units.isEmpty()) {
                 Text(
-                    text = stringResource(R.string.total),
+                    text = stringResource(R.string.no_available_records),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Bold
                     ),
                     color = MaterialTheme.colorScheme.onPrimary // Text color
                 )
-                if (units.isEmpty()) {
+            } else Column {
+                for (unit in units) {
+                    val total =
+                        expenses.filter { it.sourceInfo.unit == unit }.sumOf { it.info.amount }
                     Text(
-                        text = stringResource(R.string.no_available_records),
+                        text = total.toString().toCurrency(unit),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),
                         color = MaterialTheme.colorScheme.onPrimary // Text color
                     )
-                } else Column {
-                    for (unit in units) {
-                        val total =
-                            expenses.filter { it.sourceInfo.unit == unit }.sumOf { it.info.amount }
-                        Text(
-                            text = total.toString().toCurrency(unit),
-                            style = MaterialTheme.typography.titleSmall.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = MaterialTheme.colorScheme.onPrimary // Text color
-                        )
-                    }
                 }
             }
-            Text(
-                text = "Click to statistics",
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = Color.White,
-                    fontStyle = FontStyle.Italic
-                )
-            )
         }
     }
 }
