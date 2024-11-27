@@ -6,9 +6,11 @@ import com.alexcao.dexpense.core.Resource
 import com.alexcao.dexpense.data.data_sources.SystemDatabase
 import com.alexcao.dexpense.data.models.Expense
 import com.alexcao.dexpense.data.models.Category
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.data.models.Source
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.math.BigInteger
 import javax.inject.Inject
 
 interface ExpenseRepository {
@@ -46,6 +48,18 @@ class ExpenseRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
         try {
             systemDatabase.expenseDao().insertExpense(expense.info)
+            val source = systemDatabase.sourceDao().getSourceById(expense.sourceInfo.id)
+            val signNumber = if (expense.category.type == ExpenseType.EXPENSE)
+                BigInteger.ONE.negate()
+            else
+                BigInteger.ONE
+            systemDatabase.sourceDao().updateSource(
+                source.copy(
+                    amount = source.amount.copy(
+                        amount = source.amount.amount + expense.info.amount * signNumber
+                    )
+                )
+            )
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -57,7 +71,24 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun updateExpense(expense: Expense): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
         try {
+            val oldExpense = systemDatabase.expenseDao().getExpenseById(expense.info.id)
+            val oldAmount = oldExpense.info.amount
+            val newAmount = expense.info.amount
+            val deltaAmount = newAmount - oldAmount
             systemDatabase.expenseDao().updateExpense(expense.info)
+
+            val source = systemDatabase.sourceDao().getSourceById(expense.sourceInfo.id)
+            val signNumber = if (expense.category.type == ExpenseType.EXPENSE)
+                BigInteger.ONE.negate()
+            else
+                BigInteger.ONE
+            systemDatabase.sourceDao().updateSource(
+                source.copy(
+                    amount = source.amount.copy(
+                        amount = source.amount.amount + deltaAmount * signNumber
+                    )
+                )
+            )
             emit(Resource.Success(Unit))
         } catch (e: SQLiteConstraintException) {
             emit(Resource.Error("A category with the same name already exists"))
@@ -70,6 +101,18 @@ class ExpenseRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
         try {
             systemDatabase.expenseDao().deleteExpense(expense.info)
+            val source = systemDatabase.sourceDao().getSourceById(expense.sourceInfo.id)
+            val signNumber = if (expense.category.type == ExpenseType.EXPENSE)
+                BigInteger.ONE.negate()
+            else
+                BigInteger.ONE
+            systemDatabase.sourceDao().updateSource(
+                source.copy(
+                    amount = source.amount.copy(
+                        amount = source.amount.amount - expense.info.amount * signNumber
+                    )
+                )
+            )
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
             emit(Resource.Error("An error occurred while deleting expense"))

@@ -60,15 +60,9 @@ fun SourceItem(
             maxLines = 1,
             textAlign = TextAlign.End,
             overflow = TextOverflow.Ellipsis,
-            text = source.amount.amount.toString().toCurrency(),
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = Color.White,
-                fontWeight = FontWeight.Bold
+            text = source.amount.amount.toString().toCurrency(
+                source.info.unit,
             ),
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
-            text = source.info.unit,
             style = MaterialTheme.typography.titleSmall.copy(
                 color = Color.White,
                 fontWeight = FontWeight.Bold

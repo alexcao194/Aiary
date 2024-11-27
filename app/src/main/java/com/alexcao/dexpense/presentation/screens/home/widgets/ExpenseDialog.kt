@@ -1,5 +1,6 @@
 package com.alexcao.dexpense.presentation.screens.home.widgets
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -87,7 +88,8 @@ fun ExpenseDialog(
         }
 
         val currencyVisualTransformation = rememberCurrencyVisualTransformation(
-            currency = expense.sourceInfo.unit
+            currency = expense.sourceInfo.unit,
+            isNegative = (expenseType == ExpenseType.EXPENSE)
         )
 
         val focusManager = LocalFocusManager.current
@@ -138,18 +140,15 @@ fun ExpenseDialog(
                         value = expense.info.amount.toString(),
                         onValueChange = { value ->
                             val amount = value.trimStart('0').trim { it.isDigit().not() }
-                            if (amount.isNotBlank()) {
-                                val signedAmount = if (expenseType == ExpenseType.EXPENSE) {
-                                    "-$amount"
-                                } else {
-                                    amount
-                                }
-                                expense = expense.copy(
-                                    info = expense.info.copy(
-                                        amount = BigInteger(signedAmount)
+                            Log.d("TAG", "ExpenseDialog: amount: $amount")
+                            expense = expense.copy(
+                                info = expense.info.copy(
+                                    amount = BigInteger(
+                                        amount.ifBlank { "0" }
                                     )
                                 )
-                            }
+                            )
+                            Log.d("TAG", "ExpenseDialog: amount: ${expense.info.amount}")
                         },
                         hint = stringResource(id = R.string.amount_hint),
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -286,8 +285,7 @@ fun ExpenseDialog(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
-                    enabled = expense.info.label.isNotBlank()
-                            && expense.info.amount != BigInteger.ZERO,
+                    enabled = expense.info.label.isNotBlank(),
                     onClick = {
                         onDismissRequest()
                         if (initialExpense != null) {

@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.AnnotatedString
@@ -9,7 +10,8 @@ import com.alexcao.dexpense.utils.CurrencyOffsetMapping
 import com.alexcao.dexpense.utils.extensions.toCurrency
 
 private class CurrencyVisualTransformation(
-    private val unit: String
+    private val unit: String,
+    private val isNegative: Boolean
 ) : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val originalText = text.text.trim()
@@ -19,7 +21,7 @@ private class CurrencyVisualTransformation(
         if (originalText.isDigitsOnly().not()) {
             return TransformedText(text, OffsetMapping.Identity)
         }
-        val formattedText = originalText.toCurrency(unit)
+        val formattedText = originalText.toCurrency(unit, isNegative = isNegative)
         return TransformedText(
             AnnotatedString(formattedText),
             CurrencyOffsetMapping(originalText, formattedText)
@@ -28,8 +30,11 @@ private class CurrencyVisualTransformation(
 }
 
 @Composable
-fun rememberCurrencyVisualTransformation(currency: String): VisualTransformation {
-    return remember(currency) {
-        CurrencyVisualTransformation(currency)
+fun rememberCurrencyVisualTransformation(
+    currency: String,
+    isNegative: Boolean = false,
+): VisualTransformation {
+    return remember(currency, isNegative) {
+        CurrencyVisualTransformation(currency, isNegative)
     }
 }

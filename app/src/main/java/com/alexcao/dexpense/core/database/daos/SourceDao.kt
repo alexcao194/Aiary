@@ -57,5 +57,5 @@ interface SourceDao {
 
     @Transaction
     @Query("SELECT * FROM SourceInfo WHERE id = :id")
-    fun getSourceById(id: Int): Flow<Source>
+    suspend fun getSourceById(id: Int): Source
 }

@@ -78,7 +78,7 @@ fun SourceDialog(
     }
 
     val currencyVisualTransformation = rememberCurrencyVisualTransformation(
-        currency = source.info.unit
+        currency = source.info.unit,
     )
 
     BasicAlertDialog(
@@ -258,8 +258,7 @@ fun SourceDialog(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     ),
                     enabled = source.info.name.isNotBlank()
-                            && source.info.unit.isNotBlank()
-                            && source.amount.amount != BigInteger.ZERO,
+                            && source.info.unit.isNotBlank(),
                     onClick = {
                         onDismissRequest()
                         if (initialSource != null)

@@ -21,11 +21,14 @@ fun String.decode(): String {
     return URLDecoder.decode(this, StandardCharsets.UTF_8.toString())
 }
 
-fun String.toCurrency(currencySymbol: String? = null): String {
+fun String.toCurrency(currencySymbol: String? = null, isNegative : Boolean? = null): String {
     val formatedText = try {
         val formatter = DecimalFormat("#,###")
-        val formattedAmount = formatter.format(BigDecimal(this))
-        if (formattedAmount.startsWith('-')) formattedAmount else "+$formattedAmount"
+        when {
+            isNegative == null -> formatter.format(this.toBigDecimal())
+            isNegative -> "-${formatter.format(this.toBigDecimal().abs())}"
+            else -> formatter.format(this.toBigDecimal().abs())
+        }
     } catch (e: NumberFormatException) {
         "0"
     }

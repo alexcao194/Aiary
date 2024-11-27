@@ -144,7 +144,10 @@ fun ExpensePage(
                     val total =
                         expenses.filter { it.sourceInfo.unit == unit }.sumOf { it.info.amount }
                     Text(
-                        text = total.toString().toCurrency(unit),
+                        text = total.toString().toCurrency(
+                            unit,
+                            isNegative = expenseType == ExpenseType.EXPENSE
+                        ),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),

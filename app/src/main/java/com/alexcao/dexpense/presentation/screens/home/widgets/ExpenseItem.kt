@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.alexcao.dexpense.R
 import com.alexcao.dexpense.data.models.Expense
+import com.alexcao.dexpense.data.models.ExpenseType
 import com.alexcao.dexpense.presentation.commons.BadgeChip
 import com.alexcao.dexpense.utils.extensions.toCurrency
 
@@ -59,7 +60,10 @@ fun ExpenseItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = expense.info.amount.toString().toCurrency(expense.sourceInfo.unit),
+                    text = expense.info.amount.toString().toCurrency(
+                        expense.sourceInfo.unit,
+                        isNegative = expense.category.type == ExpenseType.EXPENSE
+                    ),
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.Bold

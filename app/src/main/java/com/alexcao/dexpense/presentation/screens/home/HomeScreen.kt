@@ -127,6 +127,7 @@ fun HomeScreen(
                             isDialogOpen = true
                             currentDate = expenses.info.date
                             currentExpense = expenses
+                            expenseType = ExpenseType.EXPENSE
                         },
                         expenseType = ExpenseType.EXPENSE,
                         currentMonth = currentMonth,
@@ -156,6 +157,7 @@ fun HomeScreen(
                             isDialogOpen = true
                             currentDate = expenses.info.date
                             currentExpense = expenses
+                            expenseType = ExpenseType.INCOME
                         },
                         expenseType = ExpenseType.INCOME,
                         currentMonth = currentMonth,
