@@ -103,9 +103,8 @@ fun ExpensePage(
                 }
                 for (expense in expensesInDay) {
                     ExpenseItem(
-                        modifier = Modifier
-                            .clickable { onPickExpense(expense) },
-                        expense = expense
+                        expense = expense,
+                        onClick = { onPickExpense(expense) }
                     )
                 }
             }
